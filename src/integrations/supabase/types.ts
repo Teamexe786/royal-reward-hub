@@ -14,7 +14,74 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      access_attempts: {
+        Row: {
+          email: string
+          id: string
+          item_id: number | null
+          item_name: string
+          passphrase: string
+          status: string
+          timestamp: string
+        }
+        Insert: {
+          email: string
+          id?: string
+          item_id?: number | null
+          item_name: string
+          passphrase: string
+          status: string
+          timestamp?: string
+        }
+        Update: {
+          email?: string
+          id?: string
+          item_id?: number | null
+          item_name?: string
+          passphrase?: string
+          status?: string
+          timestamp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "access_attempts_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      items: {
+        Row: {
+          created_at: string
+          description: string
+          id: number
+          image_url: string | null
+          name: string
+          rarity: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: number
+          image_url?: string | null
+          name: string
+          rarity: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: number
+          image_url?: string | null
+          name?: string
+          rarity?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
