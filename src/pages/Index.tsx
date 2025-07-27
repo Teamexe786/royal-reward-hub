@@ -1,98 +1,63 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import RewardCard from '@/components/RewardCard';
 import AccessModal from '@/components/AccessModal';
-import { Crown, Star, Sparkles } from 'lucide-react';
+import { Crown } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
-// Import reward images
-import crownImg from '@/assets/crown.jpg';
-import swordImg from '@/assets/sword.jpg';
-import shieldImg from '@/assets/shield.jpg';
-import amuletImg from '@/assets/amulet.jpg';
-import staffImg from '@/assets/staff.jpg';
-import ringImg from '@/assets/ring.jpg';
-import helmetImg from '@/assets/helmet.jpg';
-import gauntletsImg from '@/assets/gauntlets.jpg';
-import bootsImg from '@/assets/boots.jpg';
-import orbImg from '@/assets/orb.jpg';
-
-const rewardItems = [
-  {
-    id: 1,
-    name: "Royal Crown of Eternity",
-    description: "A legendary crown imbued with the power of ancient kings. Grants +50 Leadership and immunity to mind control.",
-    rarity: "Legendary" as const,
-    image: crownImg
-  },
-  {
-    id: 2,
-    name: "Dragonbane Sword",
-    description: "Forged in dragon fire and blessed by the gods. Deals massive damage to all enemy types.",
-    rarity: "Legendary" as const,
-    image: swordImg
-  },
-  {
-    id: 3,
-    name: "Aegis Shield of Valor",
-    description: "An unbreakable shield that has protected heroes throughout the ages. Reflects 25% of incoming damage.",
-    rarity: "Epic" as const,
-    image: shieldImg
-  },
-  {
-    id: 4,
-    name: "Amulet of Infinite Wisdom",
-    description: "Contains the knowledge of a thousand scholars. Increases experience gain by 100%.",
-    rarity: "Epic" as const,
-    image: amuletImg
-  },
-  {
-    id: 5,
-    name: "Staff of Elemental Mastery",
-    description: "Channels the raw power of the elements. Unlocks all elemental magic schools.",
-    rarity: "Legendary" as const,
-    image: staffImg
-  },
-  {
-    id: 6,
-    name: "Ring of Dimensional Storage",
-    description: "Provides unlimited inventory space across dimensions. Never lose items again.",
-    rarity: "Epic" as const,
-    image: ringImg
-  },
-  {
-    id: 7,
-    name: "Helmet of True Sight",
-    description: "Reveals hidden enemies and secrets. See through illusions and detect invisible foes.",
-    rarity: "Rare" as const,
-    image: helmetImg
-  },
-  {
-    id: 8,
-    name: "Gauntlets of Titan Strength",
-    description: "Channels the might of ancient titans. Increases carrying capacity and melee damage.",
-    rarity: "Epic" as const,
-    image: gauntletsImg
-  },
-  {
-    id: 9,
-    name: "Boots of Swift Travel",
-    description: "Blessed by the wind spirits. Increases movement speed by 200% and enables wall-walking.",
-    rarity: "Rare" as const,
-    image: bootsImg
-  },
-  {
-    id: 10,
-    name: "Orb of Cosmic Power",
-    description: "Contains the essence of a fallen star. Regenerates mana infinitely and amplifies all spells.",
-    rarity: "Legendary" as const,
-    image: orbImg
-  }
-];
+interface RewardItem {
+  id: number;
+  name: string;
+  description: string;
+  rarity: 'Legendary' | 'Epic' | 'Rare';
+  image_url: string;
+}
 
 const Index = () => {
-  const [selectedItem, setSelectedItem] = useState<typeof rewardItems[0] | null>(null);
+  const [selectedItem, setSelectedItem] = useState<RewardItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rewardItems, setRewardItems] = useState<RewardItem[]>([]);
 
-  const handleClaim = (item: typeof rewardItems[0]) => {
+  // Fetch items from Supabase
+  useEffect(() => {
+    const fetchItems = async () => {
+      const { data, error } = await supabase
+        .from('items')
+        .select('*')
+        .order('id');
+      
+      if (error) {
+        console.error('Error fetching items:', error);
+        return;
+      }
+      
+      setRewardItems(data?.map(item => ({
+        ...item,
+        rarity: item.rarity as 'Legendary' | 'Epic' | 'Rare'
+      })) || []);
+    };
+
+    fetchItems();
+
+    // Real-time subscription
+    const channel = supabase
+      .channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'items'
+        },
+        () => fetchItems()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const handleClaim = (item: RewardItem) => {
     setSelectedItem(item);
     setIsModalOpen(true);
   };
@@ -117,32 +82,14 @@ const Index = () => {
             <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-6">
               Item Rewards
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-              Discover exclusive legendary items crafted for the most dedicated warriors. 
-              Each reward holds incredible power and prestige.
-            </p>
-            <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-primary" />
-                <span>Limited Edition</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <span>Exclusive Access</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Crown className="w-4 h-4 text-primary" />
-                <span>Premium Quality</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* Rewards Grid */}
+      {/* Rewards Grid - 3 items per row, 10th item centered */}
       <div className="container mx-auto px-4 pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-          {rewardItems.map((item) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {rewardItems.slice(0, 9).map((item) => (
             <RewardCard
               key={item.id}
               item={item}
@@ -150,13 +97,25 @@ const Index = () => {
             />
           ))}
         </div>
+        {/* Last item centered */}
+        {rewardItems[9] && (
+          <div className="flex justify-center mt-6">
+            <div className="w-full md:w-1/3">
+              <RewardCard
+                key={rewardItems[9].id}
+                item={rewardItems[9]}
+                onClaim={() => handleClaim(rewardItems[9])}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Access Modal */}
       <AccessModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        itemName={selectedItem?.name || ''}
+        item={selectedItem}
       />
     </div>
   );

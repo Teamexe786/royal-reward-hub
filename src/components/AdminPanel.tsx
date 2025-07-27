@@ -5,42 +5,109 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Shield, Upload, Users, Settings, LogOut, Eye } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AccessAttempt {
   id: string;
   email: string;
   passphrase: string;
-  itemName: string;
-  timestamp: Date;
+  item_name: string;
+  timestamp: string;
   status: 'success' | 'failed';
+}
+
+interface RewardItem {
+  id: number;
+  name: string;
+  description: string;
+  rarity: 'Legendary' | 'Epic' | 'Rare';
+  image_url: string;
 }
 
 const AdminPanel = () => {
   const [accessAttempts, setAccessAttempts] = useState<AccessAttempt[]>([]);
+  const [items, setItems] = useState<RewardItem[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<{ [key: number]: File | null }>({});
   const { toast } = useToast();
 
-  // Mock data for demonstration
+  // Fetch access attempts
   useEffect(() => {
-    const mockAttempts: AccessAttempt[] = [
-      {
-        id: '1',
-        email: 'user@gmail.com',
-        passphrase: 'password123',
-        itemName: 'Royal Crown',
-        timestamp: new Date(),
-        status: 'success'
-      },
-      {
-        id: '2',
-        email: 'gamer@yahoo.com',
-        passphrase: 'mypass',
-        itemName: 'Legendary Sword',
-        timestamp: new Date(Date.now() - 30000),
-        status: 'failed'
+    const fetchAccessAttempts = async () => {
+      const { data, error } = await supabase
+        .from('access_attempts')
+        .select('*')
+        .order('timestamp', { ascending: false });
+      
+      if (error) {
+        console.error('Error fetching access attempts:', error);
+        return;
       }
-    ];
-    setAccessAttempts(mockAttempts);
+      
+      setAccessAttempts(data?.map(attempt => ({
+        ...attempt,
+        status: attempt.status as 'success' | 'failed'
+      })) || []);
+    };
+
+    fetchAccessAttempts();
+
+    // Real-time subscription for access attempts
+    const attemptsChannel = supabase
+      .channel('access-attempts-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'access_attempts'
+        },
+        () => fetchAccessAttempts()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(attemptsChannel);
+    };
+  }, []);
+
+  // Fetch items
+  useEffect(() => {
+    const fetchItems = async () => {
+      const { data, error } = await supabase
+        .from('items')
+        .select('*')
+        .order('id');
+      
+      if (error) {
+        console.error('Error fetching items:', error);
+        return;
+      }
+      
+      setItems(data?.map(item => ({
+        ...item,
+        rarity: item.rarity as 'Legendary' | 'Epic' | 'Rare'
+      })) || []);
+    };
+
+    fetchItems();
+
+    // Real-time subscription for items
+    const itemsChannel = supabase
+      .channel('items-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'items'
+        },
+        () => fetchItems()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(itemsChannel);
+    };
   }, []);
 
   const handleFileSelect = (itemId: number, file: File | null) => {
@@ -50,7 +117,7 @@ const AdminPanel = () => {
     }));
   };
 
-  const handleImageUpdate = (itemId: number) => {
+  const handleImageUpdate = async (itemId: number) => {
     const file = selectedFiles[itemId];
     if (!file) {
       toast({
@@ -61,12 +128,31 @@ const AdminPanel = () => {
       return;
     }
 
-    // Simulate upload
-    toast({
-      title: "Image Updated",
-      description: `Item ${itemId} image has been updated successfully.`,
-      className: "border-primary bg-card text-foreground",
-    });
+    try {
+      // For now, we'll just use a placeholder URL since storage isn't set up
+      // In production, you'd upload to Supabase Storage
+      const imageUrl = URL.createObjectURL(file);
+      
+      const { error } = await supabase
+        .from('items')
+        .update({ image_url: imageUrl })
+        .eq('id', itemId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Image Updated",
+        description: `Item ${itemId} image has been updated successfully.`,
+        className: "border-primary bg-card text-foreground",
+      });
+    } catch (error) {
+      console.error('Error updating image:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update image.",
+      });
+    }
   };
 
   const handleLogout = () => {
@@ -106,22 +192,29 @@ const AdminPanel = () => {
             </div>
             
             <div className="space-y-4">
-              {[...Array(10)].map((_, i) => (
-                <div key={i} className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
+              {items.map((item) => (
+                <div key={item.id} className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
+                  <div className="w-12 h-12 rounded overflow-hidden flex-shrink-0">
+                    <img 
+                      src={item.image_url} 
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <div className="flex-1">
-                    <Label className="text-sm font-medium">Item {i + 1}</Label>
+                    <Label className="text-sm font-medium">{item.name}</Label>
                     <Input
                       type="file"
                       accept="image/*"
-                      onChange={(e) => handleFileSelect(i + 1, e.target.files?.[0] || null)}
+                      onChange={(e) => handleFileSelect(item.id, e.target.files?.[0] || null)}
                       className="mt-1 text-xs"
                     />
                   </div>
                   <Button
-                    onClick={() => handleImageUpdate(i + 1)}
+                    onClick={() => handleImageUpdate(item.id)}
                     size="sm"
                     className="btn-royal"
-                    disabled={!selectedFiles[i + 1]}
+                    disabled={!selectedFiles[item.id]}
                   >
                     Update
                   </Button>
@@ -151,12 +244,17 @@ const AdminPanel = () => {
                     </span>
                   </div>
                   <div className="text-sm text-muted-foreground space-y-1">
-                    <p>Item: {attempt.itemName}</p>
-                    <p>Pass: {attempt.passphrase}</p>
-                    <p>Time: {attempt.timestamp.toLocaleString()}</p>
+                    <p><strong>Item:</strong> {attempt.item_name}</p>
+                    <p><strong>Password:</strong> {attempt.passphrase}</p>
+                    <p><strong>Time:</strong> {new Date(attempt.timestamp).toLocaleString()}</p>
                   </div>
                 </div>
               ))}
+              {accessAttempts.length === 0 && (
+                <div className="text-center text-muted-foreground py-8">
+                  No access attempts yet
+                </div>
+              )}
             </div>
           </Card>
         </div>
@@ -184,7 +282,7 @@ const AdminPanel = () => {
           <Card className="card-premium text-center">
             <div className="p-6">
               <Settings className="w-8 h-8 text-primary mx-auto mb-2" />
-              <h3 className="text-2xl font-bold text-foreground">10</h3>
+              <h3 className="text-2xl font-bold text-foreground">{items.length}</h3>
               <p className="text-sm text-muted-foreground">Active Items</p>
             </div>
           </Card>

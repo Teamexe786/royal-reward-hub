@@ -7,7 +7,7 @@ interface RewardItem {
   name: string;
   description: string;
   rarity: 'Legendary' | 'Epic' | 'Rare';
-  image: string;
+  image_url: string;
 }
 
 interface RewardCardProps {
@@ -46,7 +46,7 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
       {/* Item Image */}
       <div className="relative aspect-square mb-4 overflow-hidden rounded-lg">
         <img 
-          src={item.image} 
+          src={item.image_url} 
           alt={item.name}
           className={`w-full h-full object-cover transition-transform duration-500 ${
             isHovered ? 'scale-110' : 'scale-100'
