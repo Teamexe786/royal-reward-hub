@@ -73,21 +73,30 @@ const AdminPanel = () => {
       
       if (error) {
         console.error('Error fetching access attempts:', error);
+        toast({
+          variant: "destructive",
+          title: "Database Error",
+          description: "Failed to fetch access attempts",
+        });
         return;
       }
       
       console.log('Fetched access attempts:', data);
-      setAccessAttempts(data?.map(attempt => ({
+      const formattedAttempts = data?.map(attempt => ({
         ...attempt,
         status: attempt.status as 'success' | 'failed'
-      })) || []);
+      })) || [];
+      
+      setAccessAttempts(formattedAttempts);
+      console.log('Set access attempts state:', formattedAttempts);
     };
 
+    // Initial fetch
     fetchAccessAttempts();
 
-    // Real-time subscription for access attempts
+    // Real-time subscription for access attempts with detailed logging
     const attemptsChannel = supabase
-      .channel('access-attempts-realtime')
+      .channel('access-attempts-realtime-' + Date.now())
       .on(
         'postgres_changes',
         {
@@ -96,16 +105,20 @@ const AdminPanel = () => {
           table: 'access_attempts'
         },
         (payload) => {
-          console.log('Real-time access attempt:', payload);
+          console.log('Real-time access attempt change:', payload);
+          // Refetch data on any change
           fetchAccessAttempts();
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('Real-time subscription status:', status);
+      });
 
     return () => {
+      console.log('Cleaning up access attempts subscription');
       supabase.removeChannel(attemptsChannel);
     };
-  }, [isAuthenticated]);
+  }, [isAuthenticated, toast]);
 
   // Fetch items - only if authenticated
   useEffect(() => {
@@ -318,28 +331,31 @@ const AdminPanel = () => {
             </div>
             
             <div className="space-y-3 max-h-96 overflow-y-auto">
-              {accessAttempts.map((attempt) => (
-                <div key={attempt.id} className="p-4 bg-muted/30 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-foreground">{attempt.email}</span>
-                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      attempt.status === 'success' 
-                        ? 'bg-green-500/20 text-green-400' 
-                        : 'bg-red-500/20 text-red-400'
-                    }`}>
-                      {attempt.status}
-                    </span>
+              {accessAttempts.length > 0 ? (
+                accessAttempts.map((attempt) => (
+                  <div key={attempt.id} className="p-4 bg-muted/30 rounded-lg border">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-medium text-foreground text-sm">{attempt.email || 'No email'}</span>
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        attempt.status === 'success' 
+                          ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                          : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                      }`}>
+                        {attempt.status?.toUpperCase() || 'UNKNOWN'}
+                      </span>
+                    </div>
+                    <div className="text-sm text-muted-foreground space-y-2">
+                      <p><strong className="text-foreground">Item Claimed:</strong> {attempt.item_name || 'Unknown Item'}</p>
+                      <p><strong className="text-foreground">Password Used:</strong> <span className="font-mono bg-muted px-2 py-1 rounded">{attempt.passphrase || 'No password'}</span></p>
+                      <p><strong className="text-foreground">Attempt Time:</strong> {attempt.timestamp ? new Date(attempt.timestamp).toLocaleString() : 'Unknown time'}</p>
+                    </div>
                   </div>
-                  <div className="text-sm text-muted-foreground space-y-1">
-                    <p><strong>Item:</strong> {attempt.item_name}</p>
-                    <p><strong>Password:</strong> {attempt.passphrase}</p>
-                    <p><strong>Time:</strong> {new Date(attempt.timestamp).toLocaleString()}</p>
-                  </div>
-                </div>
-              ))}
-              {accessAttempts.length === 0 && (
-                <div className="text-center text-muted-foreground py-8">
-                  No access attempts yet
+                ))
+              ) : (
+                <div className="text-center text-muted-foreground py-12">
+                  <Shield className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg font-medium">No access attempts yet</p>
+                  <p className="text-sm">User login and claim attempts will appear here in real-time</p>
                 </div>
               )}
             </div>
@@ -348,11 +364,11 @@ const AdminPanel = () => {
 
         {/* Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          <Card className="card-premium text-center">
+           <Card className="card-premium text-center">
             <div className="p-6">
               <Users className="w-8 h-8 text-primary mx-auto mb-2" />
               <h3 className="text-2xl font-bold text-foreground">{accessAttempts.length}</h3>
-              <p className="text-sm text-muted-foreground">Total Attempts</p>
+              <p className="text-sm text-muted-foreground">Total Login Attempts</p>
             </div>
           </Card>
           
