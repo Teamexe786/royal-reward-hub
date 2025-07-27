@@ -86,9 +86,9 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Rewards Grid - 3 items per row, 10th item centered */}
+      {/* Rewards Grid - 3 items per row (small cards), 10th item centered */}
       <div className="container mx-auto px-4 pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-3 gap-4">
           {rewardItems.slice(0, 9).map((item) => (
             <RewardCard
               key={item.id}
@@ -99,8 +99,8 @@ const Index = () => {
         </div>
         {/* Last item centered */}
         {rewardItems[9] && (
-          <div className="flex justify-center mt-6">
-            <div className="w-full md:w-1/3">
+          <div className="flex justify-center mt-4">
+            <div className="w-1/3">
               <RewardCard
                 key={rewardItems[9].id}
                 item={rewardItems[9]}

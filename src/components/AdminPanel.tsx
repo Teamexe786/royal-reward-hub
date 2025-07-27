@@ -129,22 +129,31 @@ const AdminPanel = () => {
     }
 
     try {
-      // For now, we'll just use a placeholder URL since storage isn't set up
-      // In production, you'd upload to Supabase Storage
-      const imageUrl = URL.createObjectURL(file);
-      
-      const { error } = await supabase
-        .from('items')
-        .update({ image_url: imageUrl })
-        .eq('id', itemId);
+      // Convert file to base64 or blob URL for immediate display
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const imageUrl = e.target?.result as string;
+        
+        const { error } = await supabase
+          .from('items')
+          .update({ image_url: imageUrl })
+          .eq('id', itemId);
 
-      if (error) throw error;
+        if (error) throw error;
 
-      toast({
-        title: "Image Updated",
-        description: `Item ${itemId} image has been updated successfully.`,
-        className: "border-primary bg-card text-foreground",
-      });
+        // Clear the selected file
+        setSelectedFiles(prev => ({
+          ...prev,
+          [itemId]: null
+        }));
+
+        toast({
+          title: "Image Updated",
+          description: `Item image has been updated successfully.`,
+          className: "border-primary bg-card text-foreground",
+        });
+      };
+      reader.readAsDataURL(file);
     } catch (error) {
       console.error('Error updating image:', error);
       toast({
