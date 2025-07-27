@@ -2,41 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Royal Premium Design System - Gold & Black Theme */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Royal Black Base */
+    --background: 0 0% 6%;
+    --foreground: 51 100% 85%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Premium Cards */
+    --card: 0 0% 8%;
+    --card-foreground: 51 100% 85%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Overlays */
+    --popover: 0 0% 10%;
+    --popover-foreground: 51 100% 85%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Royal Gold Primary */
+    --primary: 51 100% 50%;
+    --primary-foreground: 0 0% 6%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Luxury Secondary */
+    --secondary: 45 50% 25%;
+    --secondary-foreground: 51 100% 85%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted Elegance */
+    --muted: 0 0% 15%;
+    --muted-foreground: 51 20% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Golden Accent */
+    --accent: 51 100% 50%;
+    --accent-foreground: 0 0% 6%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Danger Red */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 51 100% 95%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Borders & Inputs */
+    --border: 45 30% 20%;
+    --input: 45 30% 18%;
+    --ring: 51 100% 50%;
 
-    --radius: 0.5rem;
+    /* Premium Gradients */
+    --gradient-royal: linear-gradient(135deg, hsl(51 100% 50%), hsl(45 100% 45%));
+    --gradient-luxury: linear-gradient(180deg, hsl(0 0% 8%), hsl(0 0% 12%));
+    --gradient-glow: linear-gradient(45deg, hsl(51 100% 50% / 0.2), hsl(45 100% 45% / 0.1));
+
+    /* Premium Shadows */
+    --shadow-royal: 0 10px 40px hsl(51 100% 50% / 0.3);
+    --shadow-luxury: 0 20px 60px hsl(0 0% 0% / 0.8);
+    --shadow-glow: 0 0 30px hsl(51 100% 50% / 0.4);
+
+    /* Animation Variables */
+    --transition-luxury: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +120,91 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    background: var(--gradient-luxury);
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  /* Royal Button Variants */
+  .btn-royal {
+    @apply bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold py-3 px-6 rounded-lg;
+    box-shadow: var(--shadow-royal);
+    transition: var(--transition-luxury);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-royal:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .btn-royal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: var(--transition-luxury);
+  }
+  
+  .btn-royal:hover::before {
+    left: 100%;
+  }
+  
+  /* Premium Card Style */
+  .card-premium {
+    @apply bg-card border border-border rounded-xl p-6;
+    background: var(--gradient-luxury);
+    box-shadow: var(--shadow-luxury);
+    transition: var(--transition-luxury);
+    position: relative;
+  }
+  
+  .card-premium:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-royal);
+  }
+  
+  .card-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gradient-royal);
+    border-radius: 0.75rem 0.75rem 0 0;
+  }
+  
+  /* Glow Animation */
+  .glow-pulse {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 20px hsl(51 100% 50% / 0.2);
+    }
+    to {
+      box-shadow: 0 0 30px hsl(51 100% 50% / 0.4), 0 0 40px hsl(51 100% 50% / 0.2);
+    }
+  }
+  
+  /* Floating Animation */
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
   }
 }

@@ -70,25 +70,43 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'glow': {
+					'0%, 100%': { boxShadow: '0 0 20px hsl(51 100% 50% / 0.2)' },
+					'50%': { boxShadow: '0 0 30px hsl(51 100% 50% / 0.4), 0 0 40px hsl(51 100% 50% / 0.2)' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
+				},
+				'shimmer': {
+					'0%': { transform: 'translateX(-100%)' },
+					'100%': { transform: 'translateX(100%)' }
+				},
+				'royal-pulse': {
+					'0%, 100%': { 
+						transform: 'scale(1)',
+						boxShadow: '0 0 20px hsl(51 100% 50% / 0.3)'
 					},
-					to: {
-						height: '0'
+					'50%': { 
+						transform: 'scale(1.05)',
+						boxShadow: '0 0 40px hsl(51 100% 50% / 0.6)'
 					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'glow': 'glow 2s ease-in-out infinite alternate',
+				'float': 'float 3s ease-in-out infinite',
+				'shimmer': 'shimmer 2s ease-in-out infinite',
+				'royal-pulse': 'royal-pulse 2s ease-in-out infinite'
 			}
 		}
 	},
