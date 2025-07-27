@@ -62,39 +62,72 @@ const AdminPanel = () => {
 
   // Fetch access attempts - only if authenticated
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated) {
+      console.log('Not authenticated, skipping access attempts fetch');
+      return;
+    }
+
+    console.log('Starting to fetch access attempts...');
 
     const fetchAccessAttempts = async () => {
-      console.log('Fetching access attempts...');
-      const { data, error } = await supabase
-        .from('access_attempts')
-        .select('*')
-        .order('timestamp', { ascending: false });
+      console.log('=== FETCHING ACCESS ATTEMPTS ===');
       
-      if (error) {
-        console.error('Error fetching access attempts:', error);
+      try {
+        const { data, error } = await supabase
+          .from('access_attempts')
+          .select('*')
+          .order('timestamp', { ascending: false });
+        
+        console.log('Raw database response:', { data, error });
+        
+        if (error) {
+          console.error('Database error:', error);
+          toast({
+            variant: "destructive",
+            title: "Database Error",
+            description: `Failed to fetch access attempts: ${error.message}`,
+          });
+          return;
+        }
+        
+        if (!data) {
+          console.log('No data returned from database');
+          setAccessAttempts([]);
+          return;
+        }
+
+        console.log('Number of access attempts found:', data.length);
+        console.log('Access attempts data:', data);
+        
+        const formattedAttempts = data.map(attempt => ({
+          id: attempt.id,
+          email: attempt.email,
+          passphrase: attempt.passphrase,
+          item_id: attempt.item_id,
+          item_name: attempt.item_name,
+          timestamp: attempt.timestamp,
+          status: attempt.status as 'success' | 'failed'
+        }));
+        
+        console.log('Formatted attempts:', formattedAttempts);
+        setAccessAttempts(formattedAttempts);
+        console.log('Access attempts state updated successfully');
+        
+      } catch (error) {
+        console.error('Exception while fetching access attempts:', error);
         toast({
           variant: "destructive",
-          title: "Database Error",
+          title: "Error",
           description: "Failed to fetch access attempts",
         });
-        return;
       }
-      
-      console.log('Fetched access attempts:', data);
-      const formattedAttempts = data?.map(attempt => ({
-        ...attempt,
-        status: attempt.status as 'success' | 'failed'
-      })) || [];
-      
-      setAccessAttempts(formattedAttempts);
-      console.log('Set access attempts state:', formattedAttempts);
     };
 
     // Initial fetch
     fetchAccessAttempts();
 
-    // Real-time subscription for access attempts with detailed logging
+    // Real-time subscription
+    console.log('Setting up real-time subscription...');
     const attemptsChannel = supabase
       .channel('access-attempts-realtime-' + Date.now())
       .on(
@@ -105,8 +138,8 @@ const AdminPanel = () => {
           table: 'access_attempts'
         },
         (payload) => {
-          console.log('Real-time access attempt change:', payload);
-          // Refetch data on any change
+          console.log('=== REAL-TIME UPDATE RECEIVED ===');
+          console.log('Real-time payload:', payload);
           fetchAccessAttempts();
         }
       )
@@ -327,7 +360,7 @@ const AdminPanel = () => {
           <Card className="card-premium">
             <div className="flex items-center gap-2 mb-6">
               <Eye className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold text-foreground">Access Attempts</h2>
+              <h2 className="text-xl font-semibold text-foreground">Access Attempts ({accessAttempts.length})</h2>
             </div>
             
             <div className="space-y-3 max-h-96 overflow-y-auto">
