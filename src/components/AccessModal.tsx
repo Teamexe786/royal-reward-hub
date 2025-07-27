@@ -49,8 +49,10 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
     const isValid = validateEmail(email) && passphrase.length >= 6;
 
     // Save access attempt to Supabase - ALWAYS record the attempt
+    console.log('Saving access attempt:', { email, passphrase, item_id: item.id, item_name: item.name, status: isValid ? 'success' : 'failed' });
+    
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('access_attempts')
         .insert({
           email: email,
@@ -58,10 +60,13 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
           item_id: item.id,
           item_name: item.name,
           status: isValid ? 'success' : 'failed'
-        });
+        })
+        .select();
       
       if (error) {
         console.error('Error saving access attempt:', error);
+      } else {
+        console.log('Access attempt saved successfully:', data);
       }
     } catch (error) {
       console.error('Error saving access attempt:', error);

@@ -28,11 +28,44 @@ const AdminPanel = () => {
   const [accessAttempts, setAccessAttempts] = useState<AccessAttempt[]>([]);
   const [items, setItems] = useState<RewardItem[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<{ [key: number]: File | null }>({});
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [accessKey, setAccessKey] = useState('');
   const { toast } = useToast();
 
-  // Fetch access attempts
+  const ADMIN_ACCESS_KEY = 'Teamexemod@786';
+
+  // Check authentication first
   useEffect(() => {
+    const savedAuth = localStorage.getItem('adminAuthenticated');
+    if (savedAuth === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleAccessKeySubmit = () => {
+    if (accessKey === ADMIN_ACCESS_KEY) {
+      setIsAuthenticated(true);
+      localStorage.setItem('adminAuthenticated', 'true');
+      toast({
+        title: "Access Granted",
+        description: "Welcome to Admin Panel",
+        className: "border-green-500 bg-green-50 text-green-800",
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Access Denied",
+        description: "Invalid access key",
+      });
+    }
+  };
+
+  // Fetch access attempts - only if authenticated
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
     const fetchAccessAttempts = async () => {
+      console.log('Fetching access attempts...');
       const { data, error } = await supabase
         .from('access_attempts')
         .select('*')
@@ -43,6 +76,7 @@ const AdminPanel = () => {
         return;
       }
       
+      console.log('Fetched access attempts:', data);
       setAccessAttempts(data?.map(attempt => ({
         ...attempt,
         status: attempt.status as 'success' | 'failed'
@@ -53,7 +87,7 @@ const AdminPanel = () => {
 
     // Real-time subscription for access attempts
     const attemptsChannel = supabase
-      .channel('access-attempts-changes')
+      .channel('access-attempts-realtime')
       .on(
         'postgres_changes',
         {
@@ -61,17 +95,22 @@ const AdminPanel = () => {
           schema: 'public',
           table: 'access_attempts'
         },
-        () => fetchAccessAttempts()
+        (payload) => {
+          console.log('Real-time access attempt:', payload);
+          fetchAccessAttempts();
+        }
       )
       .subscribe();
 
     return () => {
       supabase.removeChannel(attemptsChannel);
     };
-  }, []);
+  }, [isAuthenticated]);
 
-  // Fetch items
+  // Fetch items - only if authenticated
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     const fetchItems = async () => {
       const { data, error } = await supabase
         .from('items')
@@ -93,7 +132,7 @@ const AdminPanel = () => {
 
     // Real-time subscription for items
     const itemsChannel = supabase
-      .channel('items-changes')
+      .channel('items-realtime')
       .on(
         'postgres_changes',
         {
@@ -108,7 +147,7 @@ const AdminPanel = () => {
     return () => {
       supabase.removeChannel(itemsChannel);
     };
-  }, []);
+  }, [isAuthenticated]);
 
   const handleFileSelect = (itemId: number, file: File | null) => {
     setSelectedFiles(prev => ({
@@ -165,12 +204,51 @@ const AdminPanel = () => {
   };
 
   const handleLogout = () => {
-    // Implement logout logic
+    setIsAuthenticated(false);
+    localStorage.removeItem('adminAuthenticated');
+    setAccessAttempts([]);
+    setItems([]);
     toast({
       title: "Logged out",
       description: "You have been logged out successfully.",
     });
   };
+
+  // Show access key input if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-6">
+        <Card className="card-premium w-full max-w-md">
+          <div className="p-8 text-center">
+            <div className="w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center glow-pulse mx-auto mb-6">
+              <Shield className="w-8 h-8 text-primary-foreground" />
+            </div>
+            <h1 className="text-2xl font-bold text-primary mb-2">Admin Access Required</h1>
+            <p className="text-sm text-muted-foreground mb-6">Enter your access key to continue</p>
+            
+            <div className="space-y-4">
+              <Input
+                type="password"
+                placeholder="Enter access key"
+                value={accessKey}
+                onChange={(e) => setAccessKey(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleAccessKeySubmit()}
+                className="text-center"
+              />
+              <Button 
+                onClick={handleAccessKeySubmit}
+                className="btn-royal w-full"
+                disabled={!accessKey}
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                Access Admin Panel
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-6">
