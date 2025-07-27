@@ -62,6 +62,9 @@ const AdminPanel = () => {
 
   // Fetch access attempts - only if authenticated
   useEffect(() => {
+    console.log('=== ACCESS ATTEMPTS EFFECT TRIGGERED ===');
+    console.log('isAuthenticated:', isAuthenticated);
+    
     if (!isAuthenticated) {
       console.log('Not authenticated, skipping access attempts fetch');
       return;
@@ -73,6 +76,7 @@ const AdminPanel = () => {
       console.log('=== FETCHING ACCESS ATTEMPTS ===');
       
       try {
+        console.log('Making Supabase query...');
         const { data, error } = await supabase
           .from('access_attempts')
           .select('*')
@@ -128,7 +132,7 @@ const AdminPanel = () => {
     // Real-time subscription
     console.log('Setting up real-time subscription...');
     const attemptsChannel = supabase
-      .channel('access-attempts-realtime-' + Date.now())
+      .channel('access-attempts-admin-' + Math.random())
       .on(
         'postgres_changes',
         {
