@@ -9,7 +9,7 @@ const Navbar = () => {
           <img 
             src="/lovable-uploads/ac0404fb-3013-45c8-ad12-1276cfa0a853.png" 
             alt="Free Fire Max Logo" 
-            className="h-12 w-auto"
+            className="h-40 w-45"
           />
         </div>
 
