@@ -29,7 +29,7 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
 
   return (
     <div 
-      className="card-neon group relative overflow-hidden h-[280px] w-full max-w-sm mx-auto"
+      className="card-neon group relative overflow-hidden h-[200px] w-[150px] mx-auto"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -44,7 +44,7 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
       </div>
 
       {/* Item Image */}
-      <div className="relative h-40 mb-4 overflow-hidden rounded-lg border border-primary/30">
+      <div className="relative h-28 mb-2 overflow-hidden rounded-lg border border-primary/30">
         <img 
           src={item.image_url} 
           alt={item.name}
@@ -71,9 +71,9 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
       </div>
 
       {/* Item Info */}
-      <div className="space-y-3 flex-1 flex flex-col px-2">
+      <div className="space-y-2 flex-1 flex flex-col px-2">
         <div className="flex-1">
-          <h3 className="text-sm font-bold font-orbitron text-white group-hover:text-primary transition-colors uppercase tracking-wide">
+          <h3 className="text-xs font-bold font-orbitron text-white group-hover:text-primary transition-colors uppercase tracking-wide leading-tight">
             {item.name}
           </h3>
         </div>
@@ -82,7 +82,7 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
         <Button 
           onClick={onClaim}
           variant="collect"
-          className="w-full text-xs py-2 h-9"
+          className="w-full text-xs py-1 h-7"
           size="sm"
         >
           COLLECT
