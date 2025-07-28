@@ -40,7 +40,7 @@ const Index = () => {
 
     // Real-time subscription
     const channel = supabase
-      .channel('schema-db-changes')
+      .channel('items-realtime-index-' + Math.random())
       .on(
         'postgres_changes',
         {
@@ -48,7 +48,10 @@ const Index = () => {
           schema: 'public',
           table: 'items'
         },
-        () => fetchItems()
+        (payload) => {
+          console.log('Real-time update received on main page:', payload);
+          fetchItems();
+        }
       )
       .subscribe();
 

@@ -194,7 +194,7 @@ const AdminPanel = () => {
 
     // Real-time subscription for items
     const itemsChannel = supabase
-      .channel('items-realtime')
+      .channel('items-realtime-admin-' + Math.random())
       .on(
         'postgres_changes',
         {
@@ -202,7 +202,10 @@ const AdminPanel = () => {
           schema: 'public',
           table: 'items'
         },
-        () => fetchItems()
+        (payload) => {
+          console.log('Real-time update received on admin panel:', payload);
+          fetchItems();
+        }
       )
       .subscribe();
 
