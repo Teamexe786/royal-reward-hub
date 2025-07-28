@@ -172,7 +172,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
                     <img 
                       src="/lovable-uploads/c975bbbd-21d4-45de-8dbc-07ed98b7a6ba.png" 
                       alt="Game Logo" 
-                      className="w-16 h-16 mx-auto object-cover"
+                      className="w-24 h-24 mx-auto object-cover"
                     />
                     <h3 className="font-normal text-gray-900" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>Garena Free Fire Max</h3>
                     <p className="text-sm text-gray-600 font-normal" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
