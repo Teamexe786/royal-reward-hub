@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Shield, Upload, Users, Settings, LogOut, Eye } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Shield, Upload, Users, Settings, LogOut, Eye, Edit, Plus, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -30,6 +34,15 @@ const AdminPanel = () => {
   
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [accessKey, setAccessKey] = useState('');
+  const [editingItem, setEditingItem] = useState<RewardItem | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    rarity: 'Common',
+    image_url: ''
+  });
   const { toast } = useToast();
 
   const ADMIN_ACCESS_KEY = 'Teamexemod@786';
@@ -199,6 +212,101 @@ const AdminPanel = () => {
   }, [isAuthenticated]);
 
 
+  const handleEditItem = (item: RewardItem) => {
+    setEditingItem(item);
+    setFormData({
+      name: item.name,
+      description: item.description,
+      rarity: item.rarity,
+      image_url: item.image_url || ''
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleAddItem = () => {
+    setEditingItem(null);
+    setFormData({
+      name: '',
+      description: '',
+      rarity: 'Common',
+      image_url: ''
+    });
+    setIsAddDialogOpen(true);
+  };
+
+  const handleSaveItem = async () => {
+    try {
+      if (editingItem) {
+        // Update existing item
+        const { error } = await supabase
+          .from('items')
+          .update({
+            name: formData.name,
+            description: formData.description,
+            rarity: formData.rarity,
+            image_url: formData.image_url,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', editingItem.id);
+
+        if (error) throw error;
+        setIsEditDialogOpen(false);
+        toast({
+          title: "Item Updated",
+          description: "Item has been updated successfully.",
+        });
+      } else {
+        // Add new item
+        const { error } = await supabase
+          .from('items')
+          .insert({
+            name: formData.name,
+            description: formData.description,
+            rarity: formData.rarity,
+            image_url: formData.image_url
+          });
+
+        if (error) throw error;
+        setIsAddDialogOpen(false);
+        toast({
+          title: "Item Added",
+          description: "New item has been added successfully.",
+        });
+      }
+    } catch (error) {
+      console.error('Error saving item:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to save item.",
+      });
+    }
+  };
+
+  const handleDeleteItem = async (itemId: number) => {
+    if (confirm('Are you sure you want to delete this item?')) {
+      try {
+        const { error } = await supabase
+          .from('items')
+          .delete()
+          .eq('id', itemId);
+
+        if (error) throw error;
+        toast({
+          title: "Item Deleted",
+          description: "Item has been deleted successfully.",
+        });
+      } catch (error) {
+        console.error('Error deleting item:', error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to delete item.",
+        });
+      }
+    }
+  };
+
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('adminAuthenticated');
@@ -335,6 +443,180 @@ const AdminPanel = () => {
             </div>
           </Card>
         </div>
+
+        {/* Item Management */}
+        <Card className="card-premium mt-8">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Settings className="w-5 h-5" />
+              Item Management
+            </CardTitle>
+            <Button onClick={handleAddItem} className="btn-royal">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Item
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {items.map((item) => (
+                <Card key={item.id} className="card-premium">
+                  <CardContent className="p-4">
+                    <div className="flex flex-col space-y-3">
+                      {item.image_url && (
+                        <img 
+                          src={item.image_url} 
+                          alt={item.name}
+                          className="w-full h-32 object-cover rounded-md"
+                        />
+                      )}
+                      <div>
+                        <h3 className="font-semibold text-sm text-foreground">{item.name}</h3>
+                        <p className="text-xs text-muted-foreground line-clamp-2">{item.description}</p>
+                        <Badge variant="outline" className="mt-1 text-xs">
+                          {item.rarity}
+                        </Badge>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleEditItem(item)}
+                        >
+                          <Edit className="w-3 h-3 mr-1" />
+                          Edit
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="destructive"
+                          onClick={() => handleDeleteItem(item.id)}
+                        >
+                          <Trash2 className="w-3 h-3 mr-1" />
+                          Delete
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Edit Item Dialog */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Edit Item</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="rarity">Rarity</Label>
+                <Select value={formData.rarity} onValueChange={(value) => setFormData({...formData, rarity: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Common">Common</SelectItem>
+                    <SelectItem value="Rare">Rare</SelectItem>
+                    <SelectItem value="Epic">Epic</SelectItem>
+                    <SelectItem value="Legendary">Legendary</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="image_url">Image URL</Label>
+                <Input
+                  id="image_url"
+                  value={formData.image_url}
+                  onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                  placeholder="https://example.com/image.jpg"
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button onClick={handleSaveItem} className="flex-1">
+                  Save Changes
+                </Button>
+                <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Add Item Dialog */}
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Add New Item</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="add-name">Name</Label>
+                <Input
+                  id="add-name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="add-description">Description</Label>
+                <Textarea
+                  id="add-description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="add-rarity">Rarity</Label>
+                <Select value={formData.rarity} onValueChange={(value) => setFormData({...formData, rarity: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Common">Common</SelectItem>
+                    <SelectItem value="Rare">Rare</SelectItem>
+                    <SelectItem value="Epic">Epic</SelectItem>
+                    <SelectItem value="Legendary">Legendary</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="add-image_url">Image URL</Label>
+                <Input
+                  id="add-image_url"
+                  value={formData.image_url}
+                  onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                  placeholder="https://example.com/image.jpg"
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button onClick={handleSaveItem} className="flex-1">
+                  Add Item
+                </Button>
+                <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
