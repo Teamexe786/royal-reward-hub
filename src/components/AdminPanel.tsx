@@ -238,10 +238,15 @@ const AdminPanel = () => {
   };
 
   const handleSaveItem = async () => {
+    console.log('=== SAVE ITEM TRIGGERED ===');
+    console.log('Form data:', formData);
+    console.log('Editing item:', editingItem);
+    
     try {
       if (editingItem) {
+        console.log('Updating existing item with ID:', editingItem.id);
         // Update existing item
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('items')
           .update({
             name: formData.name,
@@ -250,26 +255,41 @@ const AdminPanel = () => {
             image_url: formData.image_url,
             updated_at: new Date().toISOString()
           })
-          .eq('id', editingItem.id);
+          .eq('id', editingItem.id)
+          .select();
 
-        if (error) throw error;
+        console.log('Update response:', { data, error });
+
+        if (error) {
+          console.error('Update error:', error);
+          throw error;
+        }
+        
         setIsEditDialogOpen(false);
         toast({
           title: "Item Updated",
           description: "Item has been updated successfully.",
         });
       } else {
+        console.log('Adding new item');
         // Add new item
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('items')
           .insert({
             name: formData.name,
             description: formData.description,
             rarity: formData.rarity,
             image_url: formData.image_url
-          });
+          })
+          .select();
 
-        if (error) throw error;
+        console.log('Insert response:', { data, error });
+
+        if (error) {
+          console.error('Insert error:', error);
+          throw error;
+        }
+        
         setIsAddDialogOpen(false);
         toast({
           title: "Item Added",
@@ -281,7 +301,7 @@ const AdminPanel = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to save item.",
+        description: `Failed to save item: ${error.message}`,
       });
     }
   };
