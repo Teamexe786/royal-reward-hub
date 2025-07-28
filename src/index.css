@@ -2,63 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Royal Premium Design System - Gold & Black Theme */
+/* Neon Gaming Theme - Free Fire Max Inspired */
 
 @layer base {
   :root {
-    /* Royal Black Base */
-    --background: 0 0% 6%;
-    --foreground: 51 100% 85%;
+    /* Pure Black Base */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
 
-    /* Premium Cards */
-    --card: 0 0% 8%;
-    --card-foreground: 51 100% 85%;
+    /* Dark Cards */
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 95%;
 
     /* Overlays */
-    --popover: 0 0% 10%;
-    --popover-foreground: 51 100% 85%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 95%;
 
-    /* Royal Gold Primary */
-    --primary: 51 100% 50%;
-    --primary-foreground: 0 0% 6%;
+    /* Electric Blue Primary */
+    --primary: 195 100% 50%;
+    --primary-foreground: 0 0% 0%;
 
-    /* Luxury Secondary */
-    --secondary: 45 50% 25%;
-    --secondary-foreground: 51 100% 85%;
+    /* Purple Secondary */
+    --secondary: 270 100% 50%;
+    --secondary-foreground: 0 0% 100%;
 
-    /* Muted Elegance */
+    /* Muted Dark */
     --muted: 0 0% 15%;
-    --muted-foreground: 51 20% 65%;
+    --muted-foreground: 0 0% 70%;
 
-    /* Golden Accent */
-    --accent: 51 100% 50%;
-    --accent-foreground: 0 0% 6%;
+    /* Gold Accent */
+    --accent: 45 100% 50%;
+    --accent-foreground: 0 0% 0%;
 
-    /* Danger Red */
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 51 100% 95%;
+    /* Red Destructive */
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    /* Borders & Inputs */
-    --border: 45 30% 20%;
-    --input: 45 30% 18%;
-    --ring: 51 100% 50%;
+    /* Dark Borders & Inputs */
+    --border: 0 0% 20%;
+    --input: 0 0% 10%;
+    --ring: 195 100% 50%;
 
-    /* Premium Gradients */
-    --gradient-royal: linear-gradient(135deg, hsl(51 100% 50%), hsl(45 100% 45%));
-    --gradient-luxury: linear-gradient(180deg, hsl(0 0% 8%), hsl(0 0% 12%));
-    --gradient-glow: linear-gradient(45deg, hsl(51 100% 50% / 0.2), hsl(45 100% 45% / 0.1));
-    --gradient-claim: linear-gradient(135deg, hsl(45 100% 60%), hsl(25 100% 55%));
-    --gradient-claim-hover: linear-gradient(135deg, hsl(45 100% 70%), hsl(25 100% 65%));
+    /* Neon Gradients */
+    --gradient-neon-blue: linear-gradient(135deg, hsl(195 100% 50%), hsl(220 100% 60%));
+    --gradient-neon-purple: linear-gradient(135deg, hsl(270 100% 50%), hsl(300 100% 60%));
+    --gradient-gold: linear-gradient(135deg, hsl(45 100% 50%), hsl(60 100% 60%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 5%) 0%, hsl(0 0% 8%) 100%);
+    --gradient-collect: linear-gradient(135deg, hsl(270 100% 50%), hsl(280 100% 60%));
 
-    /* Premium Shadows */
-    --shadow-royal: 0 10px 40px hsl(51 100% 50% / 0.3);
-    --shadow-luxury: 0 20px 60px hsl(0 0% 0% / 0.8);
-    --shadow-glow: 0 0 30px hsl(51 100% 50% / 0.4);
-    --shadow-claim: 0 0 20px hsl(45 100% 60% / 0.5), inset 0 1px 0 hsl(45 100% 80% / 0.3);
+    /* Neon Shadows */
+    --shadow-blue: 0 0 20px hsl(195 100% 50% / 0.5);
+    --shadow-purple: 0 0 20px hsl(270 100% 50% / 0.5);
+    --shadow-gold: 0 0 20px hsl(45 100% 50% / 0.5);
+    --shadow-card: 0 4px 20px hsl(195 100% 50% / 0.2);
 
     /* Animation Variables */
-    --transition-luxury: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    --radius: 0.75rem;
+    --transition-neon: all 0.3s ease;
+    --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -78,41 +78,34 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Keep same neon colors for dark mode */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 195 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 270 100% 50%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 45 100% 50%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 20%;
+    --input: 0 0% 10%;
+    --ring: 195 100% 50%;
+    --sidebar-background: 0 0% 5%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 195 100% 50%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 270 100% 50%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 195 100% 50%;
   }
 }
 
@@ -123,77 +116,89 @@
 
   body {
     @apply bg-background text-foreground;
-    background: var(--gradient-luxury);
+    background: hsl(var(--background));
     min-height: 100vh;
+    font-family: 'Orbitron', sans-serif;
   }
 }
 
 @layer components {
-  /* Royal Button Variants */
-  .btn-royal {
-    @apply bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold py-3 px-6 rounded-lg;
-    box-shadow: var(--shadow-royal);
-    transition: var(--transition-luxury);
+  /* Neon Gaming Button Variants */
+  .btn-neon {
+    @apply bg-secondary text-secondary-foreground font-bold py-3 px-6 rounded uppercase tracking-wider;
+    background: var(--gradient-collect);
+    border: 2px solid hsl(var(--accent));
+    box-shadow: var(--shadow-purple);
+    transition: var(--transition-neon);
     position: relative;
     overflow: hidden;
   }
   
-  .btn-royal:hover {
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: var(--shadow-glow);
+  .btn-neon:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-purple), 0 0 30px hsl(270 100% 50% / 0.7);
+    brightness: 1.2;
   }
   
-  .btn-royal::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: var(--transition-luxury);
-  }
-  
-  .btn-royal:hover::before {
-    left: 100%;
-  }
-  
-  /* Premium Card Style */
-  .card-premium {
-    @apply bg-card border border-border rounded-xl p-6;
-    background: var(--gradient-luxury);
-    box-shadow: var(--shadow-luxury);
-    transition: var(--transition-luxury);
+  /* Neon Card Style */
+  .card-neon {
+    @apply bg-card border border-primary rounded-lg p-4;
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+    border: 1px solid hsl(var(--primary) / 0.3);
+    transition: var(--transition-neon);
     position: relative;
   }
   
-  .card-premium:hover {
+  .card-neon:hover {
     transform: translateY(-5px);
-    box-shadow: var(--shadow-royal);
+    box-shadow: var(--shadow-blue), 0 0 30px hsl(195 100% 50% / 0.4);
+    border-color: hsl(var(--primary));
   }
   
-  .card-premium::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--gradient-royal);
-    border-radius: 0.75rem 0.75rem 0 0;
+  /* Neon Text Glow */
+  .text-neon-blue {
+    color: hsl(var(--primary));
+    text-shadow: 0 0 10px hsl(195 100% 50% / 0.5);
   }
   
-  /* Glow Animation */
+  .text-neon-purple {
+    color: hsl(var(--secondary));
+    text-shadow: 0 0 10px hsl(270 100% 50% / 0.5);
+  }
+  
+  .text-neon-gold {
+    color: hsl(var(--accent));
+    text-shadow: 0 0 10px hsl(45 100% 50% / 0.5);
+  }
+  
+  /* Neon Border Glow */
+  .border-neon-glow {
+    border: 2px solid hsl(var(--accent));
+    box-shadow: 0 0 20px hsl(45 100% 50% / 0.4);
+    border-radius: 0.75rem;
+  }
+  
+  /* Video Container */
+  .video-container {
+    background: hsl(var(--card));
+    border: 2px solid hsl(var(--accent));
+    box-shadow: var(--shadow-gold);
+    border-radius: 0.5rem;
+    position: relative;
+  }
+  
+  /* Glow Pulse Animation */
   .glow-pulse {
-    animation: glow 2s ease-in-out infinite alternate;
+    animation: neon-glow 2s ease-in-out infinite alternate;
   }
   
-  @keyframes glow {
+  @keyframes neon-glow {
     from {
-      box-shadow: 0 0 20px hsl(51 100% 50% / 0.2);
+      box-shadow: 0 0 20px hsl(195 100% 50% / 0.3);
     }
     to {
-      box-shadow: 0 0 30px hsl(51 100% 50% / 0.4), 0 0 40px hsl(51 100% 50% / 0.2);
+      box-shadow: 0 0 40px hsl(195 100% 50% / 0.6), 0 0 60px hsl(195 100% 50% / 0.3);
     }
   }
   
@@ -208,6 +213,22 @@
     }
     50% {
       transform: translateY(-10px);
+    }
+  }
+  
+  /* Pulse Animation */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.02);
     }
   }
 }

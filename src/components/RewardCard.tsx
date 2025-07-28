@@ -29,22 +29,22 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
 
   return (
     <div 
-      className="card-premium group relative overflow-hidden h-[240px] w-full max-w-sm mx-auto"
+      className="card-neon group relative overflow-hidden h-[280px] w-full max-w-sm mx-auto"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Rarity Badge */}
-      <div className="absolute top-4 right-4 z-10">
-        <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm px-2 py-1 rounded-full">
-          <Crown className="w-3 h-3 text-primary" />
-          <span className={`text-xs font-semibold ${getRarityColor(item.rarity)}`}>
+      <div className="absolute top-3 right-3 z-10">
+        <div className="flex items-center gap-1 bg-black/70 backdrop-blur-sm px-3 py-1 rounded-full border border-accent/30">
+          <Crown className="w-3 h-3 text-accent" />
+          <span className={`text-xs font-bold font-orbitron ${getRarityColor(item.rarity)}`}>
             {item.rarity}
           </span>
         </div>
       </div>
 
       {/* Item Image */}
-      <div className="relative h-32 mb-3 overflow-hidden rounded-lg">
+      <div className="relative h-40 mb-4 overflow-hidden rounded-lg border border-primary/30">
         <img 
           src={item.image_url} 
           alt={item.name}
@@ -52,18 +52,18 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
             isHovered ? 'scale-110' : 'scale-100'
           }`}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
         
-        {/* Floating Animation for Stars */}
+        {/* Glowing particles */}
         <div className="absolute inset-0 pointer-events-none">
           {[...Array(3)].map((_, i) => (
-            <Star 
+            <div 
               key={i}
-              className={`absolute text-primary w-4 h-4 animate-float opacity-60`}
+              className={`absolute w-2 h-2 bg-primary rounded-full animate-float opacity-60 shadow-[0_0_8px_hsl(195,100%,50%)]`}
               style={{
-                top: `${20 + i * 25}%`,
-                left: `${80 - i * 15}%`,
-                animationDelay: `${i * 0.5}s`
+                top: `${15 + i * 25}%`,
+                left: `${75 - i * 10}%`,
+                animationDelay: `${i * 0.7}s`
               }}
             />
           ))}
@@ -71,29 +71,26 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
       </div>
 
       {/* Item Info */}
-      <div className="space-y-2 flex-1 flex flex-col">
+      <div className="space-y-3 flex-1 flex flex-col px-2">
         <div className="flex-1">
-          <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">
+          <h3 className="text-sm font-bold font-orbitron text-white group-hover:text-primary transition-colors uppercase tracking-wide">
             {item.name}
           </h3>
-          <p className="text-xs text-muted-foreground line-clamp-2">
-            {item.description}
-          </p>
         </div>
 
-        {/* Claim Button */}
+        {/* Collect Button */}
         <Button 
           onClick={onClaim}
-          variant="claim"
-          className="w-full text-xs py-2 h-8"
+          variant="collect"
+          className="w-full text-xs py-2 h-9"
           size="sm"
         >
-          CLAIM
+          COLLECT
         </Button>
       </div>
 
       {/* Hover Glow Effect */}
-      <div className={`absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 rounded-xl transition-opacity duration-300 pointer-events-none ${
+      <div className={`absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 rounded-lg transition-opacity duration-300 pointer-events-none ${
         isHovered ? 'opacity-100' : 'opacity-0'
       }`} />
     </div>

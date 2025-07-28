@@ -18,6 +18,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'orbitron': ['Orbitron', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -77,36 +80,35 @@ export default {
 					from: { height: 'var(--radix-accordion-content-height)' },
 					to: { height: '0' }
 				},
-				'glow': {
-					'0%, 100%': { boxShadow: '0 0 20px hsl(51 100% 50% / 0.2)' },
-					'50%': { boxShadow: '0 0 30px hsl(51 100% 50% / 0.4), 0 0 40px hsl(51 100% 50% / 0.2)' }
+				'neon-glow': {
+					'0%, 100%': { boxShadow: '0 0 20px hsl(195 100% 50% / 0.3)' },
+					'50%': { boxShadow: '0 0 40px hsl(195 100% 50% / 0.6), 0 0 60px hsl(195 100% 50% / 0.3)' }
+				},
+				'purple-glow': {
+					'0%, 100%': { boxShadow: '0 0 20px hsl(270 100% 50% / 0.3)' },
+					'50%': { boxShadow: '0 0 40px hsl(270 100% 50% / 0.6), 0 0 60px hsl(270 100% 50% / 0.3)' }
+				},
+				'gold-glow': {
+					'0%, 100%': { boxShadow: '0 0 20px hsl(45 100% 50% / 0.3)' },
+					'50%': { boxShadow: '0 0 40px hsl(45 100% 50% / 0.6), 0 0 60px hsl(45 100% 50% / 0.3)' }
 				},
 				'float': {
 					'0%, 100%': { transform: 'translateY(0)' },
 					'50%': { transform: 'translateY(-10px)' }
 				},
-				'shimmer': {
-					'0%': { transform: 'translateX(-100%)' },
-					'100%': { transform: 'translateX(100%)' }
-				},
-				'royal-pulse': {
-					'0%, 100%': { 
-						transform: 'scale(1)',
-						boxShadow: '0 0 20px hsl(51 100% 50% / 0.3)'
-					},
-					'50%': { 
-						transform: 'scale(1.05)',
-						boxShadow: '0 0 40px hsl(51 100% 50% / 0.6)'
-					}
+				'pulse-scale': {
+					'0%, 100%': { transform: 'scale(1)' },
+					'50%': { transform: 'scale(1.05)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'glow': 'glow 2s ease-in-out infinite alternate',
+				'neon-glow': 'neon-glow 2s ease-in-out infinite alternate',
+				'purple-glow': 'purple-glow 2s ease-in-out infinite alternate',
+				'gold-glow': 'gold-glow 2s ease-in-out infinite alternate',
 				'float': 'float 3s ease-in-out infinite',
-				'shimmer': 'shimmer 2s ease-in-out infinite',
-				'royal-pulse': 'royal-pulse 2s ease-in-out infinite'
+				'pulse-scale': 'pulse-scale 2s ease-in-out infinite'
 			}
 		}
 	},
