@@ -6,9 +6,11 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between">
         {/* Left - Logo */}
         <div className="flex items-center">
-          <div className="text-accent text-xl font-bold font-orbitron tracking-wider">
-            FREE FIRE MAX
-          </div>
+          <img 
+            src="/lovable-uploads/ac0404fb-3013-45c8-ad12-1276cfa0a853.png" 
+            alt="Free Fire Max Logo" 
+            className="h-8 w-auto"
+          />
         </div>
 
         {/* Right - Social Icons and Menu */}
