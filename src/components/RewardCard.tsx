@@ -29,19 +29,10 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
 
   return (
     <div 
-      className="card-neon group relative overflow-hidden h-[200px] w-[150px] mx-auto"
+      className="card-neon group relative overflow-hidden h-[210px] w-[150px] mx-auto flex flex-col"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Rarity Badge */}
-      <div className="absolute top-3 right-3 z-10">
-        <div className="flex items-center gap-1 bg-black/70 backdrop-blur-sm px-3 py-1 rounded-full border border-accent/30">
-          <Crown className="w-3 h-3 text-accent" />
-          <span className={`text-xs font-bold font-orbitron ${getRarityColor(item.rarity)}`}>
-            {item.rarity}
-          </span>
-        </div>
-      </div>
 
       {/* Item Image */}
       <div className="relative h-28 mb-2 overflow-hidden rounded-lg border border-primary/30">
@@ -71,9 +62,9 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
       </div>
 
       {/* Item Info */}
-      <div className="space-y-2 flex-1 flex flex-col px-2">
-        <div className="flex-1">
-          <h3 className="text-xs font-bold font-orbitron text-white group-hover:text-primary transition-colors uppercase tracking-wide leading-tight">
+      <div className="flex-1 flex flex-col justify-between p-2">
+        <div className="flex-1 flex items-center justify-center">
+          <h3 className="text-xs font-bold font-orbitron text-white group-hover:text-primary transition-colors uppercase tracking-wide leading-tight text-center">
             {item.name}
           </h3>
         </div>
@@ -82,7 +73,7 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
         <Button 
           onClick={onClaim}
           variant="collect"
-          className="w-full text-xs py-1 h-7"
+          className="w-full text-xs py-1 h-8 mt-2"
           size="sm"
         >
           COLLECT

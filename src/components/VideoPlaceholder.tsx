@@ -23,10 +23,10 @@ const VideoPlaceholder = () => {
         {/* Video iframe */}
         <div style={{position:"relative", width:"100%", height:"0px", paddingBottom:"56.250%"}}>
           <iframe 
-            allow="fullscreen" 
+            allow="fullscreen;autoplay" 
             allowFullScreen 
             height="100%" 
-            src="https://streamable.com/e/a2p2bz" 
+            src="https://streamable.com/e/a2p2bz?autoplay=1" 
             width="100%" 
             style={{border:"none", width:"100%", height:"100%", position:"absolute", left:"0px", top:"0px", overflow:"hidden"}}
             className="rounded-lg"
