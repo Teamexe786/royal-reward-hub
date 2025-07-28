@@ -29,7 +29,7 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
 
   return (
     <div 
-      className="card-premium group relative overflow-hidden h-[400px] w-full"
+      className="card-premium group relative overflow-hidden h-[240px] w-full max-w-sm mx-auto"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -44,7 +44,7 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
       </div>
 
       {/* Item Image */}
-      <div className="relative h-48 mb-4 overflow-hidden rounded-lg">
+      <div className="relative h-32 mb-3 overflow-hidden rounded-lg">
         <img 
           src={item.image_url} 
           alt={item.name}
@@ -85,8 +85,8 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
         <Button 
           onClick={onClaim}
           variant="claim"
-          className="w-full text-sm py-3 h-12"
-          size="lg"
+          className="w-full text-xs py-2 h-8"
+          size="sm"
         >
           CLAIM
         </Button>

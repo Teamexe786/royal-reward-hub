@@ -93,16 +93,25 @@ const Index = () => {
               </div>
             </div>
             <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-6">
-              Item Rewards
+              Garena Rewards
             </h1>
+            
+            {/* Free Fire Character Image */}
+            <div className="flex justify-center mb-8">
+              <img 
+                src="/lovable-uploads/b29c7055-495b-4dc2-aebc-ae09bfb74164.png" 
+                alt="Free Fire Character"
+                className="w-32 h-48 md:w-40 md:h-56 object-cover rounded-lg shadow-2xl"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Rewards Grid - 2 items per row (bigger cards), 10th item centered */}
+      {/* Rewards Grid - 3 items per row, responsive */}
       <div className="container mx-auto px-4 pb-16 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {rewardItems.slice(0, rewardItems.length % 2 === 0 ? rewardItems.length : rewardItems.length - 1).map((item) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center">
+          {rewardItems.map((item) => (
             <RewardCard
               key={item.id}
               item={item}
@@ -110,18 +119,6 @@ const Index = () => {
             />
           ))}
         </div>
-        {/* Last item centered if odd number */}
-        {rewardItems.length % 2 !== 0 && rewardItems[rewardItems.length - 1] && (
-          <div className="md:col-span-2 flex justify-center mt-6">
-            <div className="w-full md:w-1/2">
-              <RewardCard
-                key={rewardItems[rewardItems.length - 1].id}
-                item={rewardItems[rewardItems.length - 1]}
-                onClaim={() => handleClaim(rewardItems[rewardItems.length - 1])}
-              />
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Access Modal */}
