@@ -46,8 +46,15 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
         
         {/* Diagonal shine effect */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-1/4 -left-1/4 w-1/3 h-[150%] bg-gradient-to-br from-white/30 via-white/10 to-transparent transform rotate-12 opacity-40" />
+        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
+          <div 
+            className="absolute w-full h-full opacity-60 animate-shine"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0) 50%)',
+              transform: 'translateX(-100%)',
+              animation: 'shine 3s ease-in-out infinite'
+            }}
+          />
         </div>
       </div>
 
