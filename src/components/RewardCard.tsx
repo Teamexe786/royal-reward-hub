@@ -29,7 +29,7 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
 
   return (
     <div 
-      className="card-neon group relative overflow-hidden h-[210px] w-[150px] mx-auto flex flex-col"
+      className="card-neon card-shine group relative overflow-hidden h-[210px] w-[150px] mx-auto flex flex-col"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -45,17 +45,6 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
         
-        {/* Diagonal shine effect */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
-          <div 
-            className="absolute w-full h-full opacity-60 animate-shine"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0) 50%)',
-              transform: 'translateX(-100%)',
-              animation: 'shine 3s ease-in-out infinite'
-            }}
-          />
-        </div>
       </div>
 
       {/* Item Info */}
