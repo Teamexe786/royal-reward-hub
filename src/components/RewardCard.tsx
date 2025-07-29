@@ -45,19 +45,9 @@ const RewardCard = ({ item, onClaim }: RewardCardProps) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
         
-        {/* Glowing particles */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(3)].map((_, i) => (
-            <div 
-              key={i}
-              className={`absolute w-2 h-2 bg-primary rounded-full animate-float opacity-60 shadow-[0_0_8px_hsl(195,100%,50%)]`}
-              style={{
-                top: `${15 + i * 25}%`,
-                left: `${75 - i * 10}%`,
-                animationDelay: `${i * 0.7}s`
-              }}
-            />
-          ))}
+        {/* Diagonal shine effect */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -top-1/4 -left-1/4 w-1/3 h-[150%] bg-gradient-to-br from-white/30 via-white/10 to-transparent transform rotate-12 opacity-40" />
         </div>
       </div>
 
