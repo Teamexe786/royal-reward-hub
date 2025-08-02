@@ -7,16 +7,17 @@ const VideoPlaceholder = () => {
   const toggleMute = () => {
     const iframe = document.querySelector('iframe') as HTMLIFrameElement;
     if (iframe) {
-      const currentSrc = iframe.src;
+      let src = iframe.src;
+
+      // Clean up previous mute state
+      src = src.replace('&muted=1', '').replace('&autoplay=1', '');
+
       if (isMuted) {
-        // Remove muted param
-        iframe.src = currentSrc.replace('&muted=1', '');
+        iframe.src = src + '&autoplay=1'; // Unmuted autoplay
       } else {
-        // Add muted param
-        if (!currentSrc.includes('&muted=1')) {
-          iframe.src = currentSrc + '&muted=1';
-        }
+        iframe.src = src + '&autoplay=1&muted=1'; // Muted autoplay
       }
+
       setIsMuted(!isMuted);
     }
   };
@@ -24,15 +25,23 @@ const VideoPlaceholder = () => {
   return (
     <div className="container mx-auto px-6 py-8">
       <div className="video-container relative">
-        {/* Updated Video iframe */}
+        {/* Autoplay Video iframe */}
         <div style={{ position: "relative", width: "100%", height: "0px", paddingBottom: "56.250%" }}>
           <iframe
-            allow="fullscreen"
+            allow="fullscreen;autoplay"
             allowFullScreen
             height="100%"
-            src="https://streamable.com/e/9d8j5m?muted=1&nocontrols=1"
+            src="https://streamable.com/e/9d8j5m?autoplay=1&muted=1&nocontrols=1"
             width="100%"
-            style={{ border: "none", width: "100%", height: "100%", position: "absolute", left: "0px", top: "0px", overflow: "hidden" }}
+            style={{
+              border: "none",
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              left: "0px",
+              top: "0px",
+              overflow: "hidden"
+            }}
             className="rounded-lg"
           />
         </div>
@@ -57,3 +66,4 @@ const VideoPlaceholder = () => {
 };
 
 export default VideoPlaceholder;
+      
