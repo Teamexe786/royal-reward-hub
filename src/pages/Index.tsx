@@ -4,6 +4,7 @@ import AccessModal from '@/components/AccessModal';
 import Navbar from '@/components/Navbar';
 import VideoPlaceholder from '@/components/VideoPlaceholder';
 import NeonHeading from '@/components/NeonHeading';
+import SplashScreen from '@/components/SplashScreen';
 import { supabase } from '@/integrations/supabase/client';
 
 interface RewardItem {
@@ -18,6 +19,7 @@ const Index = () => {
   const [selectedItem, setSelectedItem] = useState<RewardItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rewardItems, setRewardItems] = useState<RewardItem[]>([]);
+  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -56,6 +58,14 @@ const Index = () => {
     setIsModalOpen(false);
     setSelectedItem(null);
   };
+
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+  };
+
+  if (showSplash) {
+    return <SplashScreen onComplete={handleSplashComplete} />;
+  }
 
   return (
     <div className="min-h-screen bg-background">
