@@ -11,7 +11,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   useEffect(() => {
     // Preload the audio
     console.log('Preloading audio...');
-    audioRef.current = new Audio('/confirm-click.mp3');
+    audioRef.current = new Audio('/close-button-sound.mp3');
     audioRef.current.preload = 'auto';
     
     audioRef.current.addEventListener('canplaythrough', () => {
@@ -34,36 +34,33 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     console.log('Confirm button clicked!');
     
     try {
-      // Try to play the preloaded audio
       if (audioRef.current) {
-        console.log('Attempting to play audio...');
-        audioRef.current.currentTime = 0; // Reset to start
+        console.log('Playing audio...');
+        audioRef.current.currentTime = 0;
         await audioRef.current.play();
-        console.log('Audio played successfully!');
+        
+        // Wait for audio to finish before closing
+        audioRef.current.addEventListener('ended', () => {
+          setIsClosing(true);
+          setTimeout(() => {
+            onComplete();
+          }, 500);
+        });
       } else {
-        console.error('Audio ref is null');
+        // If no audio, just close immediately
+        setIsClosing(true);
+        setTimeout(() => {
+          onComplete();
+        }, 500);
       }
     } catch (error) {
       console.error('Audio play failed:', error);
-      
-      // Fallback: try creating a new audio instance
-      try {
-        console.log('Trying fallback audio...');
-        const fallbackAudio = new Audio('/confirm-click.mp3');
-        await fallbackAudio.play();
-        console.log('Fallback audio played!');
-      } catch (fallbackError) {
-        console.error('Fallback audio also failed:', fallbackError);
-      }
+      // If audio fails, just close the splash screen
+      setIsClosing(true);
+      setTimeout(() => {
+        onComplete();
+      }, 500);
     }
-
-    // Start closing animation
-    setIsClosing(true);
-    
-    // Wait for animation then close
-    setTimeout(() => {
-      onComplete();
-    }, 500);
   };
 
   return (
