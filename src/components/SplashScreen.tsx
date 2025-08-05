@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -6,11 +6,56 @@ interface SplashScreenProps {
 
 const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isClosing, setIsClosing] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const handleConfirm = () => {
-    // Play the click sound
-    const audio = new Audio('/confirm-click.mp3');
-    audio.play().catch(e => console.log('Audio play failed:', e));
+  useEffect(() => {
+    // Preload the audio
+    console.log('Preloading audio...');
+    audioRef.current = new Audio('/confirm-click.mp3');
+    audioRef.current.preload = 'auto';
+    
+    audioRef.current.addEventListener('canplaythrough', () => {
+      console.log('Audio loaded successfully');
+    });
+    
+    audioRef.current.addEventListener('error', (e) => {
+      console.error('Audio loading error:', e);
+    });
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  const handleConfirm = async () => {
+    console.log('Confirm button clicked!');
+    
+    try {
+      // Try to play the preloaded audio
+      if (audioRef.current) {
+        console.log('Attempting to play audio...');
+        audioRef.current.currentTime = 0; // Reset to start
+        await audioRef.current.play();
+        console.log('Audio played successfully!');
+      } else {
+        console.error('Audio ref is null');
+      }
+    } catch (error) {
+      console.error('Audio play failed:', error);
+      
+      // Fallback: try creating a new audio instance
+      try {
+        console.log('Trying fallback audio...');
+        const fallbackAudio = new Audio('/confirm-click.mp3');
+        await fallbackAudio.play();
+        console.log('Fallback audio played!');
+      } catch (fallbackError) {
+        console.error('Fallback audio also failed:', fallbackError);
+      }
+    }
 
     // Start closing animation
     setIsClosing(true);
