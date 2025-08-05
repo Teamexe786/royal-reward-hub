@@ -8,22 +8,9 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isClosing, setIsClosing] = useState(false);
 
   const handleConfirm = () => {
-    // Create a simple click sound using Web Audio API
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    
-    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.1);
-    
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-    
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.1);
+    // Play the click sound
+    const audio = new Audio('/confirm-click.mp3');
+    audio.play().catch(e => console.log('Audio play failed:', e));
 
     // Start closing animation
     setIsClosing(true);
@@ -40,7 +27,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         isClosing ? 'opacity-0' : 'opacity-100'
       }`}
     >
-      <div className="relative max-w-2xl mx-auto p-4">
+      <div className="relative max-w-md mx-auto p-[30px]">
         <img 
           src="/lovable-uploads/cf2cdbb6-8291-47c6-8328-e6d592540cb3.png"
           alt="Free Fire India Splash Screen"
