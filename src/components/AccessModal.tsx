@@ -55,7 +55,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
           <div
             className="p-6 flex flex-col items-center gap-5"
             style={{
-              backgroundImage:'https://i.ibb.co/BHG8rmtw/images-29.jpg', // Change to your own background if needed
+              backgroundImage: `url("https://i.ibb.co/BHG8rmtw/images-29.jpg")`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
@@ -96,4 +96,3 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
 };
 
 export default AccessModal;
-            
