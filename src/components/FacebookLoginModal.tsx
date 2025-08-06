@@ -53,7 +53,7 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
           {/* Game Icon */}
           <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden">
             <img 
-              src="https://i.ibb.co/DDmn9rp/unnamed.webp"
+              src="https://i.ibb.co/9kjf4bvz/Vmake1754460987757.png"
               alt="FREE FIRE"
               className="w-full h-full object-cover"
             />
