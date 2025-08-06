@@ -57,13 +57,15 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
             </button>
           </div>
 
-          {/* Background Image Section */}
-          <div
-            className="w-full h-[200px] bg-cover bg-center"
-            style={{
-              backgroundImage: `url("https://i.ibb.co/HLHPQbWj/20250806-172413.png")`,
-            }}
-          />
+          {/* Embedded Video */}
+          <div className="w-full aspect-video relative">
+            <iframe
+              src="https://streamable.com/e/9d8j5m?autoplay=1&muted=1&nocontrols=1"
+              allow="fullscreen;autoplay"
+              allowFullScreen
+              className="absolute top-0 left-0 w-full h-full border-none"
+            />
+          </div>
 
           {/* Buttons */}
           <div className="w-full px-5 pb-4 pt-2 flex flex-col gap-2 items-center bg-white">
@@ -98,4 +100,3 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
 };
 
 export default AccessModal;
-        
