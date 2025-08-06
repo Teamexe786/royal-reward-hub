@@ -61,7 +61,7 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
           <div
             className="w-full h-[200px] bg-cover bg-center"
             style={{
-              backgroundImage: `url("https://i.ibb.co/BHG8rmtw/images-29.jpg")`,
+              backgroundImage: `url("https://i.ibb.co/HLHPQbWj/20250806-172413.png")`,
             }}
           />
 
