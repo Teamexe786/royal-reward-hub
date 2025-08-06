@@ -51,13 +51,15 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
             </button>
           </div>
 
-          {/* Background Video */}
-          <iframe
-            src="https://streamable.com/e/9d8j5m?autoplay=1&muted=1&nocontrols=1"
-            allow="fullscreen;autoplay"
-            allowFullScreen
-            className="absolute top-0 left-0 w-full h-full z-10"
-          />
+          {/* Background Video (touch-proof) */}
+          <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none">
+            <iframe
+              src="https://streamable.com/e/9d8j5m?autoplay=1&muted=1&nocontrols=1"
+              allow="fullscreen;autoplay"
+              allowFullScreen
+              className="w-full h-full"
+            />
+          </div>
 
           {/* Buttons */}
           <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 z-20 w-full px-3 flex flex-col items-center gap-1.5">
@@ -90,4 +92,4 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
 };
 
 export default AccessModal;
-  
+            
