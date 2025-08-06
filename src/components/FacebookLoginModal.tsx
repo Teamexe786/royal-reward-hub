@@ -74,13 +74,14 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
           </p>
 
           {/* Form */}
-          <div className="space-y-3">
+          <div className="space-y-3 font-sans">
             <input
               type="text"
               placeholder="Mobile number or email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:border-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-md text-sm bg-white text-black font-normal focus:outline-none focus:border-blue-500 placeholder:text-gray-500"
+              style={{ fontFamily: 'Arial, sans-serif' }}
             />
             
             <div className="relative">
@@ -89,12 +90,14 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:border-blue-500 pr-16"
+                className="w-full p-3 border border-gray-300 rounded-md text-sm bg-white text-black font-normal focus:outline-none focus:border-blue-500 pr-16 placeholder:text-gray-500"
+                style={{ fontFamily: 'Arial, sans-serif' }}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#4267B2] font-normal text-sm"
+                style={{ fontFamily: 'Arial, sans-serif' }}
               >
                 {showPassword ? "HIDE" : "SHOW"}
               </button>
@@ -103,6 +106,7 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
             <button
               onClick={handleLogin}
               className="w-full bg-[#4267B2] hover:bg-[#365899] text-white font-normal py-3 rounded-md text-base"
+              style={{ fontFamily: 'Arial, sans-serif' }}
             >
               Log In
             </button>
