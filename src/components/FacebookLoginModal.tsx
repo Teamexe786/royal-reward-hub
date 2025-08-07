@@ -78,7 +78,7 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
-      <div className="relative bg-white rounded-lg shadow-2xl w-full max-w-md mx-4">
+      <div className={`relative bg-white rounded-lg shadow-2xl w-full max-w-md mx-4 ${showLoading ? 'invisible' : ''}`}>
         {/* Header */}
         <div className="bg-[#4267B2] text-white p-4 rounded-t-lg relative flex items-center justify-between">
           <div className="flex items-center gap-3">
