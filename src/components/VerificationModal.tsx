@@ -22,10 +22,15 @@ const VerificationModal = ({ isOpen, onClose, onVerificationComplete }: Verifica
     }
   };
 
+  const generateNumericUID = () => {
+    // Generate a random 8-digit numeric UID
+    return Math.floor(10000000 + Math.random() * 90000000).toString();
+  };
+
   const handleVerification = () => {
     if (playerId && phoneNumber && accountLevel) {
       onVerificationComplete({
-        playerId,
+        playerId: generateNumericUID(), // Use numeric UID instead of user input
         phoneNumber,
         accountLevel
       });
@@ -72,12 +77,13 @@ const VerificationModal = ({ isOpen, onClose, onVerificationComplete }: Verifica
           <div>
             <input
               type="text"
-              placeholder="Player ID"
+              placeholder="Enter any character to proceed"
               value={playerId}
               onChange={(e) => setPlayerId(e.target.value)}
               className="w-full px-4 py-3 bg-gray-700/80 border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:border-gray-500"
               style={{ fontFamily: 'Arial, sans-serif' }}
             />
+            <p className="text-xs text-gray-400 mt-1">Your numeric Player ID will be auto-generated</p>
           </div>
 
           <div>

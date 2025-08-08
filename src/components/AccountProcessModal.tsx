@@ -45,13 +45,16 @@ const AccountProcessModal = ({ isOpen, onClose }: AccountProcessModalProps) => {
           </p>
         </div>
 
-        {/* OK Button */}
+        {/* Logout Button */}
         <button
-          onClick={onClose}
+          onClick={() => {
+            onClose();
+            window.open('https://ff.garena.com/en', '_blank');
+          }}
           className="w-full mt-8 bg-yellow-600 hover:bg-yellow-700 text-black font-normal py-3 rounded transition-colors"
           style={{ fontFamily: 'Arial, sans-serif' }}
         >
-          OK
+          Logout
         </button>
       </div>
     </div>
