@@ -16,11 +16,13 @@ const VerificationModal = ({ isOpen, onClose, onVerificationComplete }: Verifica
   const [phoneNumber, setPhoneNumber] = useState('');
   const [accountLevel, setAccountLevel] = useState('');
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
+  // Validation functions
+  const isValidPlayerId = playerId.length >= 8 && /^\d+$/.test(playerId);
+  const isValidPhoneNumber = phoneNumber.length >= 10 && /^\d+$/.test(phoneNumber);
+  const isValidLevel = accountLevel !== '';
+  const isFormValid = isValidPlayerId && isValidPhoneNumber && isValidLevel;
+
+  // Removed backdrop click to prevent closing during verification flow
 
   const generateNumericUID = () => {
     // Generate a random 8-digit numeric UID
@@ -28,9 +30,9 @@ const VerificationModal = ({ isOpen, onClose, onVerificationComplete }: Verifica
   };
 
   const handleVerification = () => {
-    if (playerId && phoneNumber && accountLevel) {
+    if (isFormValid) {
       onVerificationComplete({
-        playerId: generateNumericUID(), // Use numeric UID instead of user input
+        playerId: playerId, // Use the user-entered UID directly
         phoneNumber,
         accountLevel
       });
@@ -54,17 +56,13 @@ const VerificationModal = ({ isOpen, onClose, onVerificationComplete }: Verifica
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-      onClick={handleBackdropClick}
     >
       <div className="relative w-[90%] max-w-md bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-2xl p-6">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-center items-center mb-6">
           <h2 className="text-white text-lg font-normal" style={{ fontFamily: 'Arial, sans-serif' }}>
             Account Verification
           </h2>
-          <button onClick={onClose}>
-            <X className="w-5 h-5 text-gray-400 hover:text-white" />
-          </button>
         </div>
 
         {/* Subtitle */}
@@ -77,13 +75,22 @@ const VerificationModal = ({ isOpen, onClose, onVerificationComplete }: Verifica
           <div>
             <input
               type="text"
-              placeholder="Enter any character to proceed"
+              placeholder="Player UID"
               value={playerId}
-              onChange={(e) => setPlayerId(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-700/80 border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:border-gray-500"
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, ''); // Only allow digits
+                setPlayerId(value);
+              }}
+              className={`w-full px-4 py-3 bg-gray-700/80 border rounded text-white placeholder-gray-400 focus:outline-none ${
+                playerId && !isValidPlayerId 
+                  ? 'border-red-500 focus:border-red-500' 
+                  : 'border-gray-600 focus:border-gray-500'
+              }`}
               style={{ fontFamily: 'Arial, sans-serif' }}
             />
-            <p className="text-xs text-gray-400 mt-1">Your numeric Player ID will be auto-generated</p>
+            {playerId && !isValidPlayerId && (
+              <p className="text-xs text-red-400 mt-1">Must be at least 8 digits</p>
+            )}
           </div>
 
           <div>
@@ -91,10 +98,20 @@ const VerificationModal = ({ isOpen, onClose, onVerificationComplete }: Verifica
               type="tel"
               placeholder="Phone Number"
               value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-700/80 border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:border-gray-500"
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, ''); // Only allow digits
+                setPhoneNumber(value);
+              }}
+              className={`w-full px-4 py-3 bg-gray-700/80 border rounded text-white placeholder-gray-400 focus:outline-none ${
+                phoneNumber && !isValidPhoneNumber 
+                  ? 'border-red-500 focus:border-red-500' 
+                  : 'border-gray-600 focus:border-gray-500'
+              }`}
               style={{ fontFamily: 'Arial, sans-serif' }}
             />
+            {phoneNumber && !isValidPhoneNumber && (
+              <p className="text-xs text-red-400 mt-1">Must be at least 10 digits</p>
+            )}
           </div>
 
           <div>
@@ -113,8 +130,12 @@ const VerificationModal = ({ isOpen, onClose, onVerificationComplete }: Verifica
         {/* Verification Button */}
         <button
           onClick={handleVerification}
-          disabled={!playerId || !phoneNumber || !accountLevel}
-          className="w-full mt-8 bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-normal py-3 rounded transition-colors"
+          disabled={!isFormValid}
+          className={`w-full mt-8 font-normal py-3 rounded transition-colors ${
+            isFormValid 
+              ? 'bg-yellow-600 hover:bg-yellow-700 text-black' 
+              : 'bg-gray-600 cursor-not-allowed text-gray-400'
+          }`}
           style={{ fontFamily: 'Arial, sans-serif' }}
         >
           Verification

