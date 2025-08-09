@@ -1,4 +1,4 @@
-import { X } from 'lucide-react';
+
 
 interface AccountProcessModalProps {
   isOpen: boolean;
@@ -6,28 +6,16 @@ interface AccountProcessModalProps {
 }
 
 const AccountProcessModal = ({ isOpen, onClose }: AccountProcessModalProps) => {
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-      onClick={handleBackdropClick}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
       <div className="relative w-[90%] max-w-md bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-2xl p-6">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        {/* Header - no close button */}
+        <div className="flex justify-center items-center mb-6">
           <h2 className="text-white text-lg font-normal" style={{ fontFamily: 'Arial, sans-serif' }}>
             Account Process
           </h2>
-          <button onClick={onClose}>
-            <X className="w-5 h-5 text-gray-400 hover:text-white" />
-          </button>
         </div>
 
         {/* Message */}

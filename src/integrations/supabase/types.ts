@@ -36,7 +36,7 @@ export type Database = {
           phone_number?: string | null
           player_level?: string | null
           player_uid?: string | null
-          status: string
+          status?: string
           timestamp?: string
         }
         Update: {

